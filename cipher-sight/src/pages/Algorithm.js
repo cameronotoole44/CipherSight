@@ -3,6 +3,7 @@ import Controls from '../components/Controls';
 import bubbleSort from '../algorithms/bubbleSort';
 import quickSort from '../algorithms/quickSort';
 import mergeSort from '../algorithms/mergeSort';
+import insertionSort from '../algorithms/insertionSort';
 import selectionSort from '../algorithms/selectionSort';
 import { generateRandomArray } from '../utils/generateArray';
 
@@ -35,6 +36,7 @@ const Algorithm = () => {
             bubbleSort,
             quickSort,
             mergeSort,
+            insertionSort,
             selectionSort
         };
 
@@ -57,7 +59,6 @@ const Algorithm = () => {
         <div className="algorithm-visualizer">
             <Controls
                 onStart={startSort}
-                onPause={pauseSort}
                 onReset={resetSort}
                 onAlgorithmChange={handleAlgorithmChange}
             />
