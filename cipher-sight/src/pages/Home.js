@@ -2,9 +2,9 @@ import React from 'react';
 
 function Home() {
     return (
-        <div>
+        <div className="home-container">
             <h1>Welcome to Cipher Sight!</h1>
-            <p>A Visual representation for algorithms and data types</p>
+            <p>A visual representation for algorithms and data types.</p>
         </div>
     );
 }
