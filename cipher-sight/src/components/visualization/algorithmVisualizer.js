@@ -83,7 +83,7 @@ const AlgorithmVisualizer = () => {
                 onAlgorithmChange={setSelectedAlgorithm}
             />
         </div>
-    );
+    )
 };
 
 export default AlgorithmVisualizer;
