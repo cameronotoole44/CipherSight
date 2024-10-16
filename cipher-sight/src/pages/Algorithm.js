@@ -1,53 +1,75 @@
-import React, { useState } from 'react';
-import Navbar from '../components/Navbar';
+import React, { useState, useEffect } from 'react';
 import Controls from '../components/Controls';
-import Visualizer from '../components/visualization/algorithmVisualizer';
 import bubbleSort from '../algorithms/bubbleSort';
 import quickSort from '../algorithms/quickSort';
 import mergeSort from '../algorithms/mergeSort';
 import selectionSort from '../algorithms/selectionSort';
+import { generateRandomArray } from '../utils/generateArray';
 
 const Algorithm = () => {
-    const [selectedAlgorithm, setSelectedAlgorithm] = useState(bubbleSort);
+    const [array, setArray] = useState([]);
+    const [animationSpeed, setAnimationSpeed] = useState(100);
+    const [isRunning, setIsRunning] = useState(false);
+    const [selectedAlgorithm, setSelectedAlgorithm] = useState('bubbleSort');
 
-    const handleStart = () => {
-        console.log('Start clicked');
+    useEffect(() => {
+        resetArray();
+    }, []);
+
+    const resetArray = () => {
+        setArray(generateRandomArray(50, 100)); // reset array to 50 elements
+        setIsRunning(false);
     };
 
-    const handlePause = () => {
-        console.log('Pause clicked');
+    const updateVisualizer = (newArray) => {
+        setArray([...newArray]); // updates array state for visual
     };
 
-    const handleReset = () => {
-        console.log('Reset clicked');
+    const handleAlgorithmChange = (algorithm) => {
+        setSelectedAlgorithm(algorithm);
     };
 
-    const handleAlgorithmChange = (algorithmName) => {
-
-        const algorithms = {
+    const startSort = async () => {
+        setIsRunning(true);
+        const sortingAlgorithms = {
             bubbleSort,
             quickSort,
             mergeSort,
-            selectionSort,
+            selectionSort
         };
-        setSelectedAlgorithm(algorithms[algorithmName]);
+
+        if (sortingAlgorithms[selectedAlgorithm]) {
+            await sortingAlgorithms[selectedAlgorithm](array, updateVisualizer, animationSpeed);
+        }
+
+        setIsRunning(false);
+    };
+
+    const pauseSort = () => {
+
+    };
+
+    const resetSort = () => {
+        resetArray(); // reset
     };
 
     return (
-        <div>
-            <Navbar />
-            <Visualizer
-                onStart={handleStart}
-                onPause={handlePause}
-                onReset={handleReset}
-                algorithm={selectedAlgorithm}
-            />
+        <div className="algorithm-visualizer">
             <Controls
-                onStart={handleStart}
-                onPause={handlePause}
-                onReset={handleReset}
+                onStart={startSort}
+                onPause={pauseSort}
+                onReset={resetSort}
                 onAlgorithmChange={handleAlgorithmChange}
             />
+            <div className="visualization">
+                {array.map((value, idx) => (
+                    <div
+                        key={idx}
+                        className="array-bar"
+                        style={{ height: `${value}%` }}
+                    />
+                ))}
+            </div>
         </div>
     )
 };
