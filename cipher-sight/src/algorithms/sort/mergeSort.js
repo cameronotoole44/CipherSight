@@ -1,83 +1,100 @@
 const mergeSort = async (arr, drawVisualizer, animationSpeed, sortingRef) => {
-    const merge = async (left, right, startIdx) => {
-        const sorted = [];
-        let leftIndex = 0;
-        let rightIndex = 0;
-        const merged = [...arr];
+
+    const updateArray = (arr, startIdx, values) => {
+        const newArr = [...arr];
+        values.forEach((val, i) => {
+            newArr[startIdx + i] = val;
+        });
+        return newArr;
+    };
+
+    const merge = async (array, startIdx, midIdx, endIdx) => {
+        const leftSize = midIdx - startIdx;
+        const rightSize = endIdx - midIdx;
+        const left = array.slice(startIdx, midIdx);
+        const right = array.slice(midIdx, endIdx);
+
+        let leftPos = 0;
+        let rightPos = 0;
+        let arrayPos = startIdx;
 
         // merge two arrays
-        while (leftIndex < left.length && rightIndex < right.length) {
-            while (sortingRef.current.isPaused) {
+        while (leftPos < leftSize && rightPos < rightSize) {
+            // pause
+            if (sortingRef.current.isPaused) {
                 await new Promise(resolve => setTimeout(resolve, 100));
                 if (sortingRef.current.shouldStop) return false;
+                continue;
             }
             if (sortingRef.current.shouldStop) return false;
 
-            if (left[leftIndex] < right[rightIndex]) {
-                merged[startIdx + leftIndex + rightIndex] = left[leftIndex];
-                leftIndex++;
+            if (left[leftPos] <= right[rightPos]) {
+                arr[arrayPos] = left[leftPos];
+                leftPos++;
             } else {
-                merged[startIdx + leftIndex + rightIndex] = right[rightIndex];
-                rightIndex++;
+                arr[arrayPos] = right[rightPos];
+                rightPos++;
             }
 
-            drawVisualizer(merged);
+            arrayPos++;
+            drawVisualizer([...arr]);
             await new Promise(resolve => setTimeout(resolve, animationSpeed));
         }
 
-        // left array
-        while (leftIndex < left.length) {
-
-            while (sortingRef.current.isPaused) {
+        // remaining elements
+        while (leftPos < leftSize) {
+            if (sortingRef.current.isPaused) {
                 await new Promise(resolve => setTimeout(resolve, 100));
                 if (sortingRef.current.shouldStop) return false;
+                continue;
             }
             if (sortingRef.current.shouldStop) return false;
 
-            merged[startIdx + leftIndex + rightIndex] = left[leftIndex];
-            leftIndex++;
-            drawVisualizer(merged);
+            arr[arrayPos] = left[leftPos];
+            leftPos++;
+            arrayPos++;
+            drawVisualizer([...arr]);
             await new Promise(resolve => setTimeout(resolve, animationSpeed));
         }
 
-        // right array
-        while (rightIndex < right.length) {
-            while (sortingRef.current.isPaused) {
+        while (rightPos < rightSize) {
+            if (sortingRef.current.isPaused) {
                 await new Promise(resolve => setTimeout(resolve, 100));
                 if (sortingRef.current.shouldStop) return false;
+                continue;
             }
             if (sortingRef.current.shouldStop) return false;
 
-            merged[startIdx + leftIndex + rightIndex] = right[rightIndex];
-            rightIndex++;
-            drawVisualizer(merged);
+            arr[arrayPos] = right[rightPos];
+            rightPos++;
+            arrayPos++;
+            drawVisualizer([...arr]);
             await new Promise(resolve => setTimeout(resolve, animationSpeed));
         }
 
-        return merged;
+        return true;
     };
 
-    const sort = async (array, startIdx = 0) => {
-        if (array.length <= 1) return array;
+    const mergeSortHelper = async (array, start, end) => {
+        if (end - start <= 1) return true;
 
-        // check for pause / stop
-        while (sortingRef.current.isPaused) {
-            await new Promise(resolve => setTimeout(resolve, 100)); // Wait while paused
-            if (sortingRef.current.shouldStop) return false;
-        }
-        if (sortingRef.current.shouldStop) return false;
+        const mid = Math.floor((start + end) / 2);
 
-        const mid = Math.floor(array.length / 2);
-        const left = await sort(array.slice(0, mid), startIdx); // Recursively sort left
-        if (!left) return false;
+        // left half
+        const leftSuccess = await mergeSortHelper(array, start, mid);
+        if (!leftSuccess) return false;
 
-        const right = await sort(array.slice(mid), startIdx + mid); // Recursively sort right
-        if (!right) return false;
+        // right half
+        const rightSuccess = await mergeSortHelper(array, mid, end);
+        if (!rightSuccess) return false;
 
-        return await merge(left, right, startIdx); // merge the sorted halves
+        // merge sorted halves
+        return await merge(array, start, mid, end);
     };
 
-    return await sort(arr); // start sorting
+    // start sorting
+    const success = await mergeSortHelper(arr, 0, arr.length);
+    return success ? arr : false;
 };
 
 export default mergeSort;
