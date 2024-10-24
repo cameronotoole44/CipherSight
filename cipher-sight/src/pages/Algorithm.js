@@ -1,76 +1,89 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import Controls from '../components/Controls';
-import bubbleSort from '../algorithms/bubbleSort';
-import quickSort from '../algorithms/quickSort';
-import mergeSort from '../algorithms/mergeSort';
-import insertionSort from '../algorithms/insertionSort';
-import selectionSort from '../algorithms/selectionSort';
+import bubbleSort from '../algorithms/sort/bubbleSort';
+import quickSort from '../algorithms/sort/quickSort';
+import mergeSort from '../algorithms/sort/mergeSort';
+import insertionSort from '../algorithms/sort/insertionSort';
+import selectionSort from '../algorithms/sort/selectionSort';
 import { generateRandomArray } from '../utils/generateArray';
+import AlgorithmDescription from '../algorithms/algorithmDescription';
 
 const Algorithm = () => {
     const [array, setArray] = useState([]);
     const [animationSpeed, setAnimationSpeed] = useState(100);
     const [isRunning, setIsRunning] = useState(false);
+    const [paused, setPaused] = useState(false);
     const [selectedAlgorithm, setSelectedAlgorithm] = useState('bubbleSort');
+
+    const sortingRef = useRef({
+        isPaused: false,
+        shouldStop: false,
+    });
 
     useEffect(() => {
         resetArray();
     }, []);
 
     const resetArray = () => {
-        setArray(generateRandomArray(50, 100)); // reset array to 50 elements
+        setArray(generateRandomArray(50, 100));
         setIsRunning(false);
+        setPaused(false);
+        sortingRef.current.shouldStop = true; // stops on reset
     };
 
     const updateVisualizer = (newArray) => {
-        setArray([...newArray]); // updates array state for visual
+        setArray([...newArray]); // re-render
     };
 
-    const handleAlgorithmChange = (algorithm) => {
-        setSelectedAlgorithm(algorithm);
-    };
+    const runAlgorithm = async () => {
+        const sortingAlgorithms = { bubbleSort, quickSort, mergeSort, insertionSort, selectionSort };
+        const algorithm = sortingAlgorithms[selectedAlgorithm];
 
-    const startSort = async () => {
+        sortingRef.current.isPaused = false;
+        sortingRef.current.shouldStop = false;
+
         setIsRunning(true);
-        const sortingAlgorithms = {
-            bubbleSort,
-            quickSort,
-            mergeSort,
-            insertionSort,
-            selectionSort
-        };
+        setPaused(false);
 
-        if (sortingAlgorithms[selectedAlgorithm]) {
-            await sortingAlgorithms[selectedAlgorithm](array, updateVisualizer, animationSpeed);
-        }
+        await algorithm(array, updateVisualizer, animationSpeed, sortingRef);
 
         setIsRunning(false);
     };
 
-    const pauseSort = () => {
-
+    const startAlgorithm = async () => {
+        if (!isRunning) {
+            runAlgorithm();
+        }
     };
 
-    const resetSort = () => {
-        resetArray(); // reset
+    // sets pause state
+    const pauseAlgorithm = () => {
+        setPaused(true);
+        sortingRef.current.isPaused = true;
+    };
+
+    // resume sorting
+    const resumeAlgorithm = () => {
+        setPaused(false);
+        sortingRef.current.isPaused = false;
     };
 
     return (
         <div className="algorithm-visualizer">
             <Controls
-                onStart={startSort}
-                onReset={resetSort}
-                onAlgorithmChange={handleAlgorithmChange}
+                onStart={startAlgorithm}
+                onPause={pauseAlgorithm}
+                onResume={resumeAlgorithm}
+                onReset={resetArray}
+                onAlgorithmChange={setSelectedAlgorithm}
+                selectedAlgorithm={selectedAlgorithm}
             />
             <div className="visualization">
                 {array.map((value, idx) => (
-                    <div
-                        key={idx}
-                        className="array-bar"
-                        style={{ height: `${value}%` }}
-                    />
+                    <div key={idx} className="array-bar" style={{ height: `${value}%` }} />
                 ))}
             </div>
+            <AlgorithmDescription algorithmName={selectedAlgorithm} />
         </div>
     )
 };
