@@ -159,6 +159,18 @@ svg {
 .array-bar:hover {
   background-color: #1976d2;
 }
+/* algorithm descriptions */
+.algorithm-description {
+  margin-top: 20px; /* Ensure there's space between the description and other elements */
+  padding: 15px;
+  background-color: #f4f4f4;
+  border-radius: 5px;
+  color: #333;
+}
+
+.algorithm-description h2 {
+  margin-bottom: 10px;
+}
 
 /* Error Page */
 .error-container {
