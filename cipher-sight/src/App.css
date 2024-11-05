@@ -1,4 +1,4 @@
-/* General Styles */
+/* genera l*/
 * {
   margin: 0;
   padding: 0;
@@ -19,7 +19,7 @@ h3 {
   margin-bottom: 15px;
 }
 
-/* Navbar Styles */
+/* navbar */
 .navbar {
   background-color: #4caf50;
   padding: 15px 20px;
@@ -59,7 +59,7 @@ h3 {
   text-decoration: underline;
 }
 
-/* Home Page Styles */
+/* home*/
 .home-container {
   max-width: 1200px;
   margin: 50px auto;
@@ -83,7 +83,7 @@ h3 {
   margin: 0 auto 20px;
 }
 
-/* Controls */
+/* controls */
 .controls {
   margin-top: 30px;
   text-align: center;
@@ -119,7 +119,7 @@ h3 {
   transform: translateY(1px);
 }
 
-/* Algorithm Visualizer */
+/* algorithm visualizer */
 .visualization-container {
   margin-top: 30px;
   padding: 20px;
@@ -136,7 +136,6 @@ svg {
   border-radius: 4px;
 }
 
-/* Algorithm Visualizer Styles */
 .visualization {
   display: flex;
   justify-content: center;
@@ -159,9 +158,10 @@ svg {
 .array-bar:hover {
   background-color: #1976d2;
 }
+
 /* algorithm descriptions */
 .algorithm-description {
-  margin-top: 20px; /* Ensure there's space between the description and other elements */
+  margin-top: 20px;
   padding: 15px;
   background-color: #f4f4f4;
   border-radius: 5px;
@@ -172,7 +172,7 @@ svg {
   margin-bottom: 10px;
 }
 
-/* Error Page */
+/* error */
 .error-container {
   text-align: center;
   padding: 80px 20px;
@@ -207,7 +207,33 @@ svg {
   background-color: #45a049;
 }
 
-/* Responsive Design */
+/* arrays */
+.array-bar.highlighted {
+  background-color: #ff4081 !important;
+}
+
+.array-bar.visited {
+  background-color: #ffa726 !important;
+}
+
+.array-bar.found {
+  background-color: #4caf50 !important;
+}
+
+.array-bar.bound {
+  border: 2px solid #9c27b0;
+}
+
+.search-controls {
+  margin: 20px 0;
+  text-align: center;
+}
+
+.search-controls input {
+  margin-left: 10px;
+  padding: 5px;
+}
+
 @media (max-width: 768px) {
   .navbar {
     flex-direction: column;
