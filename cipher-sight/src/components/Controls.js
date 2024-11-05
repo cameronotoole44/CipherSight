@@ -14,6 +14,10 @@ const Controls = ({ onStart, onPause, onResume, onReset, onAlgorithmChange, sele
                 <option value="mergeSort">Merge Sort</option>
                 <option value="selectionSort">Selection Sort</option>
                 <option value="insertionSort">Insertion Sort</option>
+                <option value="binarySearch">Binary Search</option>
+                <option value="linearSearch">Linear Search</option>
+                {/* <option value="bfs">Breadth-First Search</option>
+                <option value="dfs">Depth-First Search</option> */}
             </select>
 
             <button onClick={onStart} className="control-btn">Start</button>
