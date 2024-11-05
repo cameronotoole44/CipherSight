@@ -1,2 +1,1 @@
-# CipherSight
-visual for common programming algorithms and data structures. using JavaScript and TypeScript
+I wanted to create a visual for common algorithms, starting with JavaScript having Sorting Algorithms: Bubble, Quick, Merge, Selection, and Insertion. Searching Algorithms, Linear and Binary (DFS and BFS WIP) arrays being the main data structure currently, graphs to come with BFS and DFS. Then converting this project into TypeScript to practice those skills as well.
