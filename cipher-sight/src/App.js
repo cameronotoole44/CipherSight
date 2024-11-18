@@ -3,7 +3,7 @@ import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import Navbar from './components/Navbar';
 import ErrorPage from './pages/Error';
 import Home from './pages/Home';
-import Algorithm from './pages/Algorithm';
+import AlgorithmVisualizer from './components/visualization/algorithmVisualizer';
 
 import './App.css';
 
@@ -13,7 +13,7 @@ const App = () => {
       <Navbar />
       <Routes>
         <Route path="/" element={<Home />} />
-        <Route path="/algorithm" element={<Algorithm />} />
+        <Route path="/algorithm" element={<AlgorithmVisualizer />} />
         <Route path="*" element={<ErrorPage />} />
       </Routes>
     </Router>
