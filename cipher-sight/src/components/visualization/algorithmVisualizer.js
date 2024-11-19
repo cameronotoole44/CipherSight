@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
+import { Link } from 'react-router-dom';
 import * as d3 from 'd3';
 import bubbleSort from '../../algorithms/sort/bubbleSort';
 import quickSort from '../../algorithms/sort/quickSort';
@@ -7,8 +8,8 @@ import insertionSort from '../../algorithms/sort/insertionSort';
 import selectionSort from '../../algorithms/sort/selectionSort';
 import binarySearch from '../../algorithms/search/binarySearch';
 import linearSearch from '../../algorithms/search/linearSearch';
-import bfs from '../../algorithms/search/bfs';
-import dfs from '../../algorithms/search/dfs';
+import bfs from '../../algorithms/search/breadthFirstSearch';
+import dfs from '../../algorithms/search/depthFirstSearch';
 import Controls from '../Controls';
 import { generateRandomArray } from '../../utils/generateArray';
 import { generateRandomGraph } from '../../utils/generateGraph';
@@ -39,61 +40,58 @@ const AlgorithmVisualizer = () => {
         }
     }, [selectedAlgorithm]);
 
-    // draw array
     const drawArray = (arr) => {
         const svg = d3.select(svgRef.current);
-        svg.selectAll("*").remove();  // clear previous svg
+        svg.selectAll('*').remove();
 
         const width = 600;
         const height = 400;
         const barWidth = width / arr.length;
 
-        svg.selectAll("rect")
+        svg.selectAll('rect')
             .data(arr)
             .enter()
-            .append("rect")
-            .attr("x", (d, i) => i * barWidth)
-            .attr("y", d => height - (d / 100) * height)
-            .attr("width", barWidth - 2)
-            .attr("height", d => (d / 100) * height)
-            .attr("class", "array-bar");
+            .append('rect')
+            .attr('x', (d, i) => i * barWidth)
+            .attr('y', d => height - (d / 100) * height)
+            .attr('width', barWidth - 2)
+            .attr('height', d => (d / 100) * height)
+            .attr('class', 'array-bar');
     };
 
-    // draw graph (dfs, and bfs)
     const drawGraph = (graphData) => {
         const svg = d3.select(svgRef.current);
-        svg.selectAll("*").remove();
+        svg.selectAll('*').remove();
 
         const width = 600;
         const height = 400;
 
         const simulation = d3.forceSimulation(graphData.nodes)
-            .force("link", d3.forceLink(graphData.links).distance(100))
-            .force("charge", d3.forceManyBody().strength(-200))
-            .force("center", d3.forceCenter(width / 2, height / 2));
+            .force('link', d3.forceLink(graphData.links).distance(100))
+            .force('charge', d3.forceManyBody().strength(-200))
+            .force('center', d3.forceCenter(width / 2, height / 2));
 
-        svg.selectAll("line")
+        svg.selectAll('line')
             .data(graphData.links)
             .enter()
-            .append("line")
-            .attr("stroke", "#999");
+            .append('line')
+            .attr('stroke', '#999');
 
-        const node = svg.selectAll("circle")
+        const node = svg.selectAll('circle')
             .data(graphData.nodes)
             .enter()
-            .append("circle")
-            .attr("r", 10)
-            .attr("fill", "#69b3a2");
+            .append('circle')
+            .attr('r', 10)
+            .attr('fill', '#69b3a2');
 
-        simulation.on("tick", () => {
-            svg.selectAll("line")
-                .attr("x1", d => d.source.x)
-                .attr("y1", d => d.source.y)
-                .attr("x2", d => d.target.x)
-                .attr("y2", d => d.target.y);
+        simulation.on('tick', () => {
+            svg.selectAll('line')
+                .attr('x1', d => d.source.x)
+                .attr('y1', d => d.source.y)
+                .attr('x2', d => d.target.x)
+                .attr('y2', d => d.target.y);
 
-            node.attr("cx", d => d.x)
-                .attr("cy", d => d.y);
+            node.attr('cx', d => d.x).attr('cy', d => d.y);
         });
     };
 
@@ -106,34 +104,47 @@ const AlgorithmVisualizer = () => {
         setPaused(false);
 
         try {
-            if (['bubbleSort', 'quickSort', 'mergeSort', 'insertionSort', 'selectionSort'].includes(selectedAlgorithm)) {
-                await {
-                    bubbleSort,
-                    quickSort,
-                    mergeSort,
-                    insertionSort,
-                    selectionSort
-                }[selectedAlgorithm](arrayCopy, drawArray, animationSpeed, sortingRef);
-            } else if (selectedAlgorithm === 'binarySearch') {
-                await binarySearch(arrayCopy, drawArray, animationSpeed);
-            } else if (selectedAlgorithm === 'linearSearch') {
-                await linearSearch(arrayCopy, drawArray, animationSpeed);
-            } else if (selectedAlgorithm === 'bfs') {
-                await bfs(graph, drawGraph, animationSpeed);
-            } else if (selectedAlgorithm === 'dfs') {
-                await dfs(graph, drawGraph, animationSpeed);
+            switch (selectedAlgorithm) {
+                case 'bubbleSort':
+                    await bubbleSort(arrayCopy, drawArray, animationSpeed, sortingRef);
+                    break;
+                case 'quickSort':
+                    await quickSort(arrayCopy, drawArray, animationSpeed, sortingRef);
+                    break;
+                case 'mergeSort':
+                    await mergeSort(arrayCopy, drawArray, animationSpeed, sortingRef);
+                    break;
+                case 'insertionSort':
+                    await insertionSort(arrayCopy, drawArray, animationSpeed, sortingRef);
+                    break;
+                case 'selectionSort':
+                    await selectionSort(arrayCopy, drawArray, animationSpeed, sortingRef);
+                    break;
+                case 'binarySearch':
+                    await binarySearch(arrayCopy, drawArray, animationSpeed);
+                    break;
+                case 'linearSearch':
+                    await linearSearch(arrayCopy, drawArray, animationSpeed);
+                    break;
+                case 'bfs':
+                    await bfs(graph, drawGraph, animationSpeed);
+                    break;
+                case 'dfs':
+                    await dfs(graph, drawGraph, animationSpeed);
+                    break;
+                default:
+                    console.error('Unknown algorithm:', selectedAlgorithm);
+                    break;
             }
         } catch (error) {
-            console.error("Error during algorithm execution:", error);
+            console.error('Error during algorithm execution:', error);
         } finally {
             setIsRunning(false);
         }
     };
 
     const startAlgorithm = () => {
-        if (!isRunning) {
-            runAlgorithm();
-        }
+        if (!isRunning) runAlgorithm();
     };
 
     const handlePause = () => {
@@ -155,7 +166,7 @@ const AlgorithmVisualizer = () => {
         setTimeout(() => {
             initializeData();
             sortingRef.current.shouldStop = false;
-        }, 100);  // delay length
+        }, 100);
     };
 
     useEffect(() => {
@@ -165,11 +176,11 @@ const AlgorithmVisualizer = () => {
     return (
         <div className="visualization-container">
             <h1>Algorithm Visualizer</h1>
-            <div className="visualization">
+            <div className="visualization visualization">
                 <svg ref={svgRef} width="600" height="400" />
                 <Controls
                     selectedAlgorithm={selectedAlgorithm}
-                    setSelectedAlgorithm={setSelectedAlgorithm}
+                    onAlgorithmChange={setSelectedAlgorithm}
                     isRunning={isRunning}
                     paused={paused}
                     onStart={startAlgorithm}
@@ -177,6 +188,12 @@ const AlgorithmVisualizer = () => {
                     onResume={handleResume}
                     onReset={handleReset}
                 />
+                <Link
+                    to={`/help?algorithmName=${selectedAlgorithm}`}
+                    className="button help-button"
+                >
+                    Help
+                </Link>
             </div>
         </div>
     )
