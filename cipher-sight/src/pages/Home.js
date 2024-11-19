@@ -32,9 +32,6 @@ function Home() {
                     <Link to="/algorithm" className="button">
                         Launch Visualizer
                     </Link>
-                    <button className="button">
-                        Help
-                    </button>
                 </div>
 
                 <div className="features">
@@ -50,7 +47,7 @@ function Home() {
                 Ready
             </div>
         </div>
-    );
-}
+    )
+};
 
 export default Home;
