@@ -1,1 +1,29 @@
-I wanted to create a visual for common algorithms, starting with JavaScript having Sorting Algorithms: Bubble, Quick, Merge, Selection, and Insertion. Searching Algorithms, Linear and Binary (DFS and BFS WIP) arrays being the main data structure currently, graphs to come with BFS and DFS. Then converting this project into TypeScript to practice those skills as well.
+# CipherSight
+
+A comprehensive JavaScript and TypeScript project focused on visualizing and implementing common algorithms and data structures.
+
+## Current Implementations
+
+## Sorting Algorithms
+
+- Bubble Sort: Simple comparison-based sorting algorithm
+- Quick Sort: Efficient divide-and-conquer sorting method
+- Merge Sort: Stable sorting algorithm using divide-and-conquer strategy
+- Selection Sort: In-place comparison sorting algorithm
+- Insertion Sort: Builds the final sorted array one item at a time
+
+## Searching Algorithms
+
+- Linear Search: Simple sequential search through an array
+- Binary Search: Efficient search on sorted arrays
+
+## Data Structures
+
+- Arrays: Primary data structure currently implemented
+
+## Upcoming
+
+- Breadth First Search
+- Depth First Search
+- Graphs
+- Linked Lists
