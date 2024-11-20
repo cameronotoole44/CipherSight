@@ -1,34 +1,31 @@
-const linearSearch = async (arr, updateVisualizer, delay, target) => {
+const linearSearch = async (arr, target, updateVisualizer, delay = 1000) => {
     for (let i = 0; i < arr.length; i++) {
-        // highlight element thats being checked
-        await updateVisualizer({
-            type: 'search',
-            currentIndex: i,
-            visitedIndices: Array.from({ length: i }, (_, idx) => idx),
-            found: arr[i] === target
-        });
+        updateVisualizer(
+            arr,
+            i,
+            arr.slice(0, i).map((_, idx) => idx),
+            arr[i] === target
+        );
 
         await new Promise(resolve => setTimeout(resolve, delay));
 
         if (arr[i] === target) {
-            // target found
-            await updateVisualizer({
-                type: 'search',
-                currentIndex: i,
-                visitedIndices: Array.from({ length: i + 1 }, (_, idx) => idx),
-                found: true
-            });
+            updateVisualizer(
+                arr,
+                i,
+                arr.slice(0, i + 1).map((_, idx) => idx),
+                true
+            );
             return i;
         }
     }
 
-    // target not found
-    await updateVisualizer({
-        type: 'search',
-        currentIndex: -1,
-        visitedIndices: Array.from({ length: arr.length }, (_, idx) => idx),
-        found: false
-    });
+    updateVisualizer(
+        arr,
+        -1,
+        arr.map((_, idx) => idx),
+        false
+    );
     return -1;
 };
 
