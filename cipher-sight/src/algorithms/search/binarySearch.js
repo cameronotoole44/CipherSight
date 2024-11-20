@@ -1,31 +1,39 @@
-const binarySearch = async (array, updateVisualizer, animationSpeed, target) => {
-    let left = 0;
-    let right = array.length - 1;
+export async function binarySearch(arr, target, drawArray) {
+    let low = 0;
+    let high = arr.length - 1;
+    const visitedIndices = [];
 
-    while (left <= right) {
-        const mid = Math.floor((left + right) / 2);
+    // console.log("Array to search:", arr);
+    // console.log("Target to find:", target);
 
-        updateVisualizer({
-            currentIndex: mid,
-            found: array[mid] === target,
-            visitedIndices: [mid],
-            leftBound: left,
-            rightBound: right
-        });
+    const delay = ms => new Promise(resolve => setTimeout(resolve, ms));
 
-        await new Promise(resolve => setTimeout(resolve, animationSpeed));
+    while (low <= high) {
+        const mid = Math.floor((low + high) / 2);
+        visitedIndices.push(mid);
 
-        if (array[mid] === target) {
+        drawArray(arr, mid, visitedIndices, false, low, high);
+
+        await delay(800);
+
+        if (arr[mid] === target) {
+            drawArray(arr, mid, visitedIndices, true, low, high);
+            // console.log('Target found at index:', mid);
             return mid;
         }
 
-        if (array[mid] < target) {
-            left = mid + 1;
+        if (arr[mid] < target) {
+            low = mid + 1;
         } else {
-            right = mid - 1;
+            high = mid - 1;
         }
+
+        await delay(800);
     }
+
+    // console.log('Target not found');
+    drawArray(arr, -1, visitedIndices, false, low, high);
     return -1;
-};
+}
 
 export default binarySearch;
