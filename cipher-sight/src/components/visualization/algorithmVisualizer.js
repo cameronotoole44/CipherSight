@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { Link } from 'react-router-dom';
 import * as d3 from 'd3';
+import mermaid from 'mermaid';
 import bubbleSort from '../../algorithms/sort/bubbleSort';
 import quickSort from '../../algorithms/sort/quickSort';
 import mergeSort from '../../algorithms/sort/mergeSort';
@@ -17,134 +18,202 @@ import { generateRandomGraph } from '../../utils/generateGraph';
 const AlgorithmVisualizer = () => {
     const [array, setArray] = useState([]);
     const [graph, setGraph] = useState(null);
-    const svgRef = useRef(null);
-    const [animationSpeed] = useState(500);
+    const [selectedAlgorithm, setSelectedAlgorithm] = useState('bubbleSort');
     const [isRunning, setIsRunning] = useState(false);
     const [paused, setPaused] = useState(false);
-    const [selectedAlgorithm, setSelectedAlgorithm] = useState('bubbleSort');
+    const [target, setTarget] = useState(null);
+    const [isInitialized, setIsInitialized] = useState(false);
 
+    const svgRef = useRef(null);
+    const mermaidRef = useRef(null);
     const sortingRef = useRef({
         isPaused: false,
         shouldStop: false,
     });
 
-    const initializeData = useCallback(() => {
-        if (['bfs', 'dfs'].includes(selectedAlgorithm)) {
-            const newGraph = generateRandomGraph(10, 0.3);
-            setGraph(newGraph);
-            drawGraph(newGraph);
-        } else {
-            const newArray = generateRandomArray(20);
-            setArray(newArray);
-            drawArray(newArray);
-        }
-    }, [selectedAlgorithm]);
+    const animationSpeed = 1000;
 
-    const drawArray = (arr) => {
+    useEffect(() => {
+        mermaid.initialize({
+            startOnLoad: true,
+            securityLevel: 'loose',
+            theme: 'default'
+        });
+    }, []);
+
+    const drawArray = useCallback((arr, currentIndex = -1, visitedIndices = [], targetFound = false, leftBound = 0, rightBound = arr.length - 1) => {
+        if (!svgRef.current) return;
+
         const svg = d3.select(svgRef.current);
         svg.selectAll('*').remove();
 
         const width = 600;
         const height = 400;
         const barWidth = width / arr.length;
+        const maxValue = Math.max(...arr);
 
-        svg.selectAll('rect')
+
+        const visualizerColors = {
+            background: '#C0C0C0',
+            default: '#C3C7CB',
+            current: '#FDFEC9',
+            found: '#00A800',
+            visited: '#808080',
+            range: '#008081',
+            text: '#000',
+            border: '#87888F'
+        };
+
+        const container = svg.append('g')
+            .attr('transform', `translate(0, 0)`);
+
+        container.append('rect')
+            .attr('width', width)
+            .attr('height', height)
+            .attr('fill', visualizerColors.background);
+
+        container.selectAll('.bar')
             .data(arr)
             .enter()
             .append('rect')
-            .attr('x', (d, i) => i * barWidth)
-            .attr('y', d => height - (d / 100) * height)
+            .attr('class', 'bar')
+            .attr('x', (d, i) => i * barWidth + 1)
+            .attr('y', (d) => height - (d / maxValue) * (height - 40))
             .attr('width', barWidth - 2)
-            .attr('height', d => (d / 100) * height)
-            .attr('class', 'array-bar');
-    };
+            .attr('height', (d) => (d / maxValue) * (height - 40))
+            .attr('fill', (d, i) => {
+                if (i === currentIndex && targetFound) return visualizerColors.found;
+                if (i === currentIndex) return visualizerColors.current;
+                if (visitedIndices.includes(i)) return visualizerColors.visited;
+                if (i >= leftBound && i <= rightBound) return visualizerColors.range;
+                return visualizerColors.default;
+            })
+            .attr('stroke', visualizerColors.border)
+            .attr('stroke-width', 1);
 
-    const drawGraph = (graphData) => {
-        const svg = d3.select(svgRef.current);
-        svg.selectAll('*').remove();
-
-        const width = 600;
-        const height = 400;
-
-        const simulation = d3.forceSimulation(graphData.nodes)
-            .force('link', d3.forceLink(graphData.links).distance(100))
-            .force('charge', d3.forceManyBody().strength(-200))
-            .force('center', d3.forceCenter(width / 2, height / 2));
-
-        svg.selectAll('line')
-            .data(graphData.links)
+        container.selectAll('text')
+            .data(arr)
             .enter()
-            .append('line')
-            .attr('stroke', '#999');
+            .append('text')
+            .attr('x', (d, i) => i * barWidth + barWidth / 2)
+            .attr('y', height - 15)
+            .attr('text-anchor', 'middle')
+            .attr('fill', visualizerColors.text)
+            .attr('font-size', '12px')
+            .attr('font-family', 'MS Sans Serif, Arial, sans-serif')
+            .text(d => d);
 
-        const node = svg.selectAll('circle')
-            .data(graphData.nodes)
-            .enter()
-            .append('circle')
-            .attr('r', 10)
-            .attr('fill', '#69b3a2');
+        if (target !== null) {
+            const targetBox = svg.append('g')
+                .attr('transform', `translate(${width / 2 - 50}, 10)`);
 
-        simulation.on('tick', () => {
-            svg.selectAll('line')
-                .attr('x1', d => d.source.x)
-                .attr('y1', d => d.source.y)
-                .attr('x2', d => d.target.x)
-                .attr('y2', d => d.target.y);
+            targetBox.append('rect')
+                .attr('width', 100)
+                .attr('height', 25)
+                .attr('fill', visualizerColors.background)
+                .attr('stroke', visualizerColors.border)
+                .attr('stroke-width', 1);
 
-            node.attr('cx', d => d.x).attr('cy', d => d.y);
-        });
-    };
+            targetBox.append('text')
+                .attr('x', 50)
+                .attr('y', 17)
+                .attr('text-anchor', 'middle')
+                .attr('fill', visualizerColors.text)
+                .attr('font-family', 'MS Sans Serif, Arial, sans-serif')
+                .attr('font-size', '12px')
+                .text(`Target: ${target}`);
+        }
+    }, [target]);
+
+    const drawGraphWithMermaid = useCallback(async (graph, visitedNodes = [], currentNode = null) => {
+
+    }, []);
+
+    const initializeData = useCallback(() => {
+        if (isInitialized) return;
+
+        if (['bfs', 'dfs'].includes(selectedAlgorithm)) {
+            const newGraph = generateRandomGraph(10, 0.3);
+            setGraph(newGraph);
+            drawGraphWithMermaid(newGraph);
+        } else {
+            let newArray = generateRandomArray(20);
+
+            if (selectedAlgorithm === 'binarySearch') {
+                newArray.sort((a, b) => a - b);
+            }
+
+            if (['binarySearch', 'linearSearch'].includes(selectedAlgorithm)) {
+                const randomTarget = newArray[Math.floor(Math.random() * newArray.length)];
+                setTarget(randomTarget);
+            } else {
+                setTarget(null);
+            }
+
+            setArray(newArray);
+            drawArray(newArray);
+        }
+
+        setIsInitialized(true);
+    }, [selectedAlgorithm, drawArray, drawGraphWithMermaid, isInitialized]);
 
     const runAlgorithm = async () => {
-        const arrayCopy = [...array];
+        if (isRunning) return;
+
         sortingRef.current.isPaused = false;
         sortingRef.current.shouldStop = false;
-
         setIsRunning(true);
-        setPaused(false);
 
         try {
+            let result;
             switch (selectedAlgorithm) {
                 case 'bubbleSort':
-                    await bubbleSort(arrayCopy, drawArray, animationSpeed, sortingRef);
-                    break;
                 case 'quickSort':
-                    await quickSort(arrayCopy, drawArray, animationSpeed, sortingRef);
-                    break;
                 case 'mergeSort':
-                    await mergeSort(arrayCopy, drawArray, animationSpeed, sortingRef);
-                    break;
                 case 'insertionSort':
-                    await insertionSort(arrayCopy, drawArray, animationSpeed, sortingRef);
+                case 'selectionSort': {
+                    const sortFunction = {
+                        bubbleSort,
+                        quickSort,
+                        mergeSort,
+                        insertionSort,
+                        selectionSort
+                    }[selectedAlgorithm];
+
+                    result = await sortFunction([...array], drawArray, animationSpeed, sortingRef);
                     break;
-                case 'selectionSort':
-                    await selectionSort(arrayCopy, drawArray, animationSpeed, sortingRef);
+                }
+                case 'binarySearch': {
+                    if (target === null) {
+                        throw new Error('No target value set for binary search');
+                    }
+                    result = await binarySearch([...array], target, drawArray);
                     break;
-                case 'binarySearch':
-                    await binarySearch(arrayCopy, drawArray, animationSpeed);
+                }
+                case 'linearSearch': {
+                    if (target === null) {
+                        throw new Error('No target value set for linear search');
+                    }
+                    result = await linearSearch([...array], target, drawArray);
                     break;
-                case 'linearSearch':
-                    await linearSearch(arrayCopy, drawArray, animationSpeed);
-                    break;
+                }
                 case 'bfs':
-                    await bfs(graph, drawGraph, animationSpeed);
+                case 'dfs': {
+                    const searchFunction = selectedAlgorithm === 'bfs' ? bfs : dfs;
+                    result = await searchFunction(graph, drawGraphWithMermaid, animationSpeed);
                     break;
-                case 'dfs':
-                    await dfs(graph, drawGraph, animationSpeed);
-                    break;
+                }
                 default:
-                    console.error('Unknown algorithm:', selectedAlgorithm);
-                    break;
+                    throw new Error(`Unknown algorithm: ${selectedAlgorithm}`);
             }
+
+            console.log(`Algorithm ${selectedAlgorithm} completed:`, result);
         } catch (error) {
-            console.error('Error during algorithm execution:', error);
+            console.error('Error running algorithm:', error);
         } finally {
             setIsRunning(false);
+            setPaused(false);
         }
-    };
-
-    const startAlgorithm = () => {
-        if (!isRunning) runAlgorithm();
     };
 
     const handlePause = () => {
@@ -157,16 +226,18 @@ const AlgorithmVisualizer = () => {
         sortingRef.current.isPaused = false;
     };
 
-    const handleReset = () => {
+    const handleReset = useCallback(() => {
         sortingRef.current.shouldStop = true;
         sortingRef.current.isPaused = false;
         setIsRunning(false);
         setPaused(false);
+        setIsInitialized(false);
+        initializeData();
+    }, [initializeData]);
 
-        setTimeout(() => {
-            initializeData();
-            sortingRef.current.shouldStop = false;
-        }, 100);
+    const handleAlgorithmChange = (newAlgorithm) => {
+        setSelectedAlgorithm(newAlgorithm);
+        setIsInitialized(false);
     };
 
     useEffect(() => {
@@ -176,14 +247,27 @@ const AlgorithmVisualizer = () => {
     return (
         <div className="visualization-container">
             <h1>Algorithm Visualizer</h1>
-            <div className="visualization visualization">
-                <svg ref={svgRef} width="600" height="400" />
+            <div className="visualization">
+                {['bfs', 'dfs'].includes(selectedAlgorithm) ? (
+                    <div
+                        id="mermaid-svg-container"
+                        ref={mermaidRef}
+                        className="visualization-graph"
+                    ></div>
+                ) : (
+                    <svg
+                        ref={svgRef}
+                        width="600"
+                        height="400"
+                        className="visualization-array"
+                    ></svg>
+                )}
                 <Controls
                     selectedAlgorithm={selectedAlgorithm}
-                    onAlgorithmChange={setSelectedAlgorithm}
+                    onAlgorithmChange={handleAlgorithmChange}
                     isRunning={isRunning}
                     paused={paused}
-                    onStart={startAlgorithm}
+                    onStart={runAlgorithm}
                     onPause={handlePause}
                     onResume={handleResume}
                     onReset={handleReset}
