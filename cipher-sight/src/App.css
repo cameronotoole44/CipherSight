@@ -8,7 +8,7 @@
 
 body {
   background-color: #316597;
-  color: var(--win98-text);
+  color: #000;
   line-height: 1.2;
 }
 
@@ -101,7 +101,6 @@ body {
   font-size: 14px;
 }
 
-/* Windows 98 Select */
 .select {
   background-color: #fff;
   border: 2px solid;
@@ -138,9 +137,9 @@ body {
   border-color: #808080 #fff #fff #808080;
 }
 
-/* Visualization styles */
+/* VISUALIZER */
 .visualization {
-  background-color: #fff;
+  background-color: #c0c0c0;
   border: 2px solid;
   border-color: #808080 #fff #fff #808080;
   padding: 8px;
@@ -151,31 +150,14 @@ body {
   background-color: #c0c0c0;
   border: 2px solid;
   border-color: #808080 #fff #fff #808080;
-  padding: 8px;
-  margin-bottom: 8px;
+  max-width: 800px;
+  margin: 2rem auto;
+  padding: 0;
 }
 
-.array-bar {
-  fill: #008080;
-  stroke: #006666;
-  stroke-width: 1;
-  margin: 0 1px;
-  border: 1px solid #006666;
-}
-
-.array-bar.highlighted {
-  fill: #ffff00;
-  stroke: #cccc00;
-}
-
-.array-bar.visited {
-  fill: #808080;
-  stroke: #666666;
-}
-
-.array-bar.found {
-  fill: #00ff00;
-  stroke: #00cc00;
+.visualization-graph {
+  width: 600px;
+  height: 400px;
 }
 
 /* CONTROLS */
