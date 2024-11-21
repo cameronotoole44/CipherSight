@@ -19,7 +19,7 @@ A comprehensive JavaScript and TypeScript project focused on visualizing and imp
 
 ## Data Structures
 
-- Arrays: Primary data structure currently implemented
+- Arrays
 
 ## Upcoming
 
