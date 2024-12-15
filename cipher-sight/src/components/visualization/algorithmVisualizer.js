@@ -37,96 +37,131 @@ const AlgorithmVisualizer = () => {
         mermaid.initialize({
             startOnLoad: true,
             securityLevel: 'loose',
-            theme: 'default'
+            theme: 'default',
         });
     }, []);
 
-    const drawArray = useCallback((arr, currentIndex = -1, visitedIndices = [], targetFound = false, leftBound = 0, rightBound = arr.length - 1) => {
-        if (!svgRef.current) return;
+    const drawArray = useCallback(
+        (arr, currentIndex = -1, visitedIndices = [], targetFound = false, leftBound = 0, rightBound = arr.length - 1) => {
+            if (!svgRef.current) return;
 
-        const svg = d3.select(svgRef.current);
-        svg.selectAll('*').remove();
+            const svg = d3.select(svgRef.current);
+            svg.selectAll('*').remove();
 
-        const width = 600;
-        const height = 400;
-        const barWidth = width / arr.length;
-        const maxValue = Math.max(...arr);
+            const width = 600;
+            const height = 400;
+            const barWidth = width / arr.length;
+            const maxValue = Math.max(...arr);
 
+            const visualizerColors = {
+                background: '#C0C0C0',
+                default: '#C3C7CB',
+                current: '#FDFEC9',
+                found: '#00A800',
+                visited: '#808080',
+                range: '#008081',
+                text: '#000',
+                border: '#87888F',
+            };
 
-        const visualizerColors = {
-            background: '#C0C0C0',
-            default: '#C3C7CB',
-            current: '#FDFEC9',
-            found: '#00A800',
-            visited: '#808080',
-            range: '#008081',
-            text: '#000',
-            border: '#87888F'
-        };
+            const container = svg.append('g').attr('transform', `translate(0, 0)`);
 
-        const container = svg.append('g')
-            .attr('transform', `translate(0, 0)`);
+            container
+                .append('rect')
+                .attr('width', width)
+                .attr('height', height)
+                .attr('fill', visualizerColors.background);
 
-        container.append('rect')
-            .attr('width', width)
-            .attr('height', height)
-            .attr('fill', visualizerColors.background);
-
-        container.selectAll('.bar')
-            .data(arr)
-            .enter()
-            .append('rect')
-            .attr('class', 'bar')
-            .attr('x', (d, i) => i * barWidth + 1)
-            .attr('y', (d) => height - (d / maxValue) * (height - 40))
-            .attr('width', barWidth - 2)
-            .attr('height', (d) => (d / maxValue) * (height - 40))
-            .attr('fill', (d, i) => {
-                if (i === currentIndex && targetFound) return visualizerColors.found;
-                if (i === currentIndex) return visualizerColors.current;
-                if (visitedIndices.includes(i)) return visualizerColors.visited;
-                if (i >= leftBound && i <= rightBound) return visualizerColors.range;
-                return visualizerColors.default;
-            })
-            .attr('stroke', visualizerColors.border)
-            .attr('stroke-width', 1);
-
-        container.selectAll('text')
-            .data(arr)
-            .enter()
-            .append('text')
-            .attr('x', (d, i) => i * barWidth + barWidth / 2)
-            .attr('y', height - 15)
-            .attr('text-anchor', 'middle')
-            .attr('fill', visualizerColors.text)
-            .attr('font-size', '12px')
-            .attr('font-family', 'MS Sans Serif, Arial, sans-serif')
-            .text(d => d);
-
-        if (target !== null) {
-            const targetBox = svg.append('g')
-                .attr('transform', `translate(${width / 2 - 50}, 10)`);
-
-            targetBox.append('rect')
-                .attr('width', 100)
-                .attr('height', 25)
-                .attr('fill', visualizerColors.background)
+            container
+                .selectAll('.bar')
+                .data(arr)
+                .enter()
+                .append('rect')
+                .attr('class', 'bar')
+                .attr('x', (d, i) => i * barWidth + 1)
+                .attr('y', (d) => height - (d / maxValue) * (height - 40))
+                .attr('width', barWidth - 2)
+                .attr('height', (d) => (d / maxValue) * (height - 40))
+                .attr('fill', (d, i) => {
+                    if (i === currentIndex && targetFound) return visualizerColors.found;
+                    if (i === currentIndex) return visualizerColors.current;
+                    if (visitedIndices.includes(i)) return visualizerColors.visited;
+                    if (i >= leftBound && i <= rightBound) return visualizerColors.range;
+                    return visualizerColors.default;
+                })
                 .attr('stroke', visualizerColors.border)
                 .attr('stroke-width', 1);
 
-            targetBox.append('text')
-                .attr('x', 50)
-                .attr('y', 17)
+            container
+                .selectAll('text')
+                .data(arr)
+                .enter()
+                .append('text')
+                .attr('x', (d, i) => i * barWidth + barWidth / 2)
+                .attr('y', height - 15)
                 .attr('text-anchor', 'middle')
                 .attr('fill', visualizerColors.text)
-                .attr('font-family', 'MS Sans Serif, Arial, sans-serif')
                 .attr('font-size', '12px')
-                .text(`Target: ${target}`);
+                .attr('font-family', 'MS Sans Serif, Arial, sans-serif')
+                .text((d) => d);
+
+            if (target !== null) {
+                const targetBox = svg
+                    .append('g')
+                    .attr('transform', `translate(${width / 2 - 50}, 10)`);
+
+                targetBox
+                    .append('rect')
+                    .attr('width', 100)
+                    .attr('height', 25)
+                    .attr('fill', visualizerColors.background)
+                    .attr('stroke', visualizerColors.border)
+                    .attr('stroke-width', 1);
+
+                targetBox
+                    .append('text')
+                    .attr('x', 50)
+                    .attr('y', 17)
+                    .attr('text-anchor', 'middle')
+                    .attr('fill', visualizerColors.text)
+                    .attr('font-family', 'MS Sans Serif, Arial, sans-serif')
+                    .attr('font-size', '12px')
+                    .text(`Target: ${target}`);
+            }
+        },
+        [target]
+    );
+
+    const drawGraphWithMermaid = useCallback(async (graph, currentNode = null, edgesVisited = new Set(), visitOrder = []) => {
+        if (!mermaidRef.current) return;
+
+        const graphDescription = `
+            graph TD
+            ${graph.nodes.map((node) => `${node.id}["${node.label || node.id}"]`).join('\n')}
+            ${graph.links
+                .map((link) => {
+                    const visited = edgesVisited.has(`${link.source.id}-${link.target.id}`) || edgesVisited.has(`${link.target.id}-${link.source.id}`);
+                    return `${link.source.id} --> |${visited ? 'Visited' : ''}| ${link.target.id}`;
+                })
+                .join('\n')}
+        `;
+
+        try {
+            mermaid.mermaidAPI.render('graphDiv', graphDescription, (svgCode) => {
+                if (mermaidRef.current) {
+                    mermaidRef.current.innerHTML = svgCode;
+
+                    if (currentNode) {
+                        const currentNodeElement = mermaidRef.current.querySelector(`[id*="${currentNode.id}"]`);
+                        if (currentNodeElement) {
+                            currentNodeElement.style.fill = '#FDFEC9';
+                        }
+                    }
+                }
+            });
+        } catch (error) {
+            console.error('Error rendering Mermaid graph:', error);
         }
-    }, [target]);
-
-    const drawGraphWithMermaid = useCallback(async (graph, visitedNodes = [], currentNode = null) => {
-
     }, []);
 
     const initializeData = useCallback(() => {
@@ -177,7 +212,7 @@ const AlgorithmVisualizer = () => {
                         quickSort,
                         mergeSort,
                         insertionSort,
-                        selectionSort
+                        selectionSort,
                     }[selectedAlgorithm];
 
                     result = await sortFunction([...array], drawArray, animationSpeed, sortingRef);
@@ -280,7 +315,7 @@ const AlgorithmVisualizer = () => {
                 </Link>
             </div>
         </div>
-    )
+    );
 };
 
 export default AlgorithmVisualizer;
