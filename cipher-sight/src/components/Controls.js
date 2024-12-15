@@ -20,8 +20,8 @@ const Controls = ({ onStart, onPause, onResume, onReset, onAlgorithmChange, sele
                     <option value="insertionSort">Insertion Sort</option>
                     <option value="binarySearch">Binary Search</option>
                     <option value="linearSearch">Linear Search</option>
-                    <option value="breadthFirstSearch">Breadth First Search</option>
-                    <option value="depthFirstSearch">Depth First Search</option>
+                    <option value="bfs">Breadth First Search</option>
+                    <option value="dfs">Depth First Search</option>
                 </select>
             </div>
             <div className="button-group">
