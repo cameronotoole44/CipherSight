@@ -999,55 +999,43 @@ body {
 }
 
 .algorithm-description {
-  background: #c0c0c0;
-  border: 2px solid;
-  border-color: #fff #808080 #808080 #fff;
-  box-shadow: inset -1px -1px #0a0a0a, inset 1px 1px #dfdfdf,
-    inset -2px -2px grey, inset 2px 2px #fff;
-  width: 640px;
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  margin: 0;
-  padding: 0;
+  background-color: #c0c0c0;
+  border: solid 2px;
+  border-color: #ffffff #808080 #808080 #ffffff;
+  padding: 16px;
+  margin: 20px auto;
+  max-width: 800px;
+  font-family: "MS Sans Serif", Arial, sans-serif;
 }
 
 .algorithm-description h2 {
-  background: #000080;
-  color: #fff;
-  padding: 3px 6px;
-  margin: 0;
-  font-size: 14px;
+  background-color: #0a246a;
+  color: white;
+  padding: 4px 6px;
+  margin-bottom: 16px;
+  font-size: 16px;
   font-weight: bold;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
 }
 
 .algorithm-description p {
-  margin: 8px;
-  line-height: 1.4;
-  color: #222;
-  font-size: 14px;
+  margin-bottom: 12px;
+  line-height: 1.5;
+  font-size: 18px;
 }
 
 .back-button {
-  background: #c0c0c0;
-  border: 2px solid;
-  border-color: #fff #808080 #808080 #fff;
+  background-color: #c0c0c0;
+  border: outset 2px;
+  border-color: #ffffff #808080 #808080 #ffffff;
   padding: 4px 8px;
-  margin-bottom: 1rem;
-  font-family: "MS Sans Serif", "Segoe UI", Tahoma, sans-serif;
-  font-size: 0.9rem;
+  font-family: "MS Sans Serif", Arial, sans-serif;
+  font-size: 11px;
+  margin-bottom: 16px;
   cursor: pointer;
-  position: relative;
-  color: black;
-  text-decoration: none;
 }
 
 .back-button:active {
-  border-color: #808080 #fff #fff #808080;
+  border-style: inset;
   padding: 5px 7px 3px 9px;
 }
 

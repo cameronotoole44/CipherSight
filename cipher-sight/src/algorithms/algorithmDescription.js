@@ -5,7 +5,16 @@ const AlgorithmDescription = () => {
     const [searchParams] = useSearchParams();
     const navigate = useNavigate();
 
-    const algorithmName = searchParams.get('algorithmName') || 'defaultAlgorithm';
+    let algorithmName = searchParams.get('algorithmName') || 'defaultAlgorithm';
+
+    const algorithmMap = {
+        'bfs': 'breadthFirstSearch',
+        'dfs': 'depthFirstSearch',
+    };
+
+    if (algorithmMap[algorithmName]) {
+        algorithmName = algorithmMap[algorithmName];
+    }
 
     const descriptions = {
         bubbleSort: "Bubble Sort is a simple comparison-based algorithm where adjacent elements are compared and swapped if they are in the wrong order. Like hobbits arranging their feast tables - checking each pair of dishes and swapping them until everything's in order, from mushrooms to lembas bread.",
@@ -21,11 +30,11 @@ const AlgorithmDescription = () => {
     };
 
     const timeComplexities = {
-        bubbleSort: "Time Complexity: O(n^2)",
-        quickSort: "Time Complexity: O(n log n) on average, O(n^2) in the worst case",
+        bubbleSort: "Time Complexity: O(n²)",
+        quickSort: "Time Complexity: O(n log n) on average, O(n²) in the worst case",
         mergeSort: "Time Complexity: O(n log n)",
-        insertionSort: "Time Complexity: O(n^2)",
-        selectionSort: "Time Complexity: O(n^2)",
+        insertionSort: "Time Complexity: O(n²)",
+        selectionSort: "Time Complexity: O(n²)",
         linearSearch: "Time Complexity: O(n)",
         binarySearch: "Time Complexity: O(log n)",
         depthFirstSearch: "Time Complexity: O(V + E) where V is vertices and E is edges",
@@ -33,16 +42,32 @@ const AlgorithmDescription = () => {
         defaultAlgorithm: ""
     };
 
+    const formatAlgorithmName = (name) => {
+        if (name === 'defaultAlgorithm') return 'Algorithm Description';
+
+        if (name === 'breadthFirstSearch') return 'Breadth-First Search (BFS)';
+        if (name === 'depthFirstSearch') return 'Depth-First Search (DFS)';
+
+        return name
+            .replace(/([A-Z])/g, ' $1')
+            .replace(/^./, (str) => str.toUpperCase());
+    };
+
+    const description = descriptions[algorithmName] ||
+        `Description for ${formatAlgorithmName(algorithmName)} is not available yet.`;
+
+    const timeComplexity = timeComplexities[algorithmName] || '';
+
     return (
         <div className="algorithm-description">
             <button onClick={() => navigate(-1)} className="button back-button">
                 Back
             </button>
-            <h2>{algorithmName.replace(/([A-Z])/g, ' $1')}</h2>
-            <p>{descriptions[algorithmName]}</p>
-            {timeComplexities[algorithmName] && <p>{timeComplexities[algorithmName]}</p>}
+            <h2>{formatAlgorithmName(algorithmName)}</h2>
+            <p>{description}</p>
+            {timeComplexity && <p>{timeComplexity}</p>}
         </div>
-    )
+    );
 };
 
 export default AlgorithmDescription;
