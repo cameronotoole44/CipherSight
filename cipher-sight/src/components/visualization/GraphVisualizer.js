@@ -84,7 +84,7 @@ const GraphVisualizer = forwardRef(({ algorithm, animationSpeed = 1000 }, ref) =
 
         const stepCollector = [];
         const collectStep = (step) => {
-            stepCollector.push({ ...step }); // clone to avoid reference issues
+            stepCollector.push({ ...step });
             return Promise.resolve();
         };
 
@@ -113,16 +113,12 @@ const GraphVisualizer = forwardRef(({ algorithm, animationSpeed = 1000 }, ref) =
 
         Object.entries(graph).forEach(([node, neighbors]) => {
             neighbors.forEach(neighbor => {
-                // only render once!
                 if (node < neighbor || !graph[neighbor]?.includes(node)) {
                     const startPos = nodePositions[node] || { x: 0, y: 0 };
                     const endPos = nodePositions[neighbor] || { x: 0, y: 0 };
-
-                    // has edge been visited?
                     const isVisited =
                         currentStep.edgesVisited?.has(`${node}-${neighbor}`) ||
                         currentStep.edgesVisited?.has(`${neighbor}-${node}`);
-
                     edges.push(
                         <line
                             key={`${node}-${neighbor}`}
@@ -130,7 +126,7 @@ const GraphVisualizer = forwardRef(({ algorithm, animationSpeed = 1000 }, ref) =
                             y1={startPos.y}
                             x2={endPos.x}
                             y2={endPos.y}
-                            stroke={isVisited ? '#4CAF50' : '#aaa'}
+                            stroke={isVisited ? 'var(--win98-edge-visited)' : 'var(--win98-edge-default)'}
                             strokeWidth={isVisited ? 3 : 1.5}
                         />
                     );
@@ -141,32 +137,30 @@ const GraphVisualizer = forwardRef(({ algorithm, animationSpeed = 1000 }, ref) =
     };
 
     return (
-        <div className="flex flex-col space-y-4">
-            <div className="p-2 bg-gray-100 rounded">
-                <h3 className="text-lg font-bold mb-1">
+        <div className={`graph-container ${isPaused ? 'graph-paused' : ''}`}>
+            <div className="graph-info-panel">
+                <h3 className="graph-title">
                     {algorithm === 'bfs' ? 'Breadth-First Search' : 'Depth-First Search'}
                 </h3>
-                <div className="text-sm">
-                    <span className="font-medium">Step {currentStepIndex + 1} of {steps.length || '?'}</span>
-                    <p className="mt-1">
-                        {isPaused ? 'Paused: ' : ''}
-                        {currentStep.description || 'Click Start to begin visualization'}</p>
+                <div className="graph-step-info">
+                    <span className="graph-step-counter">Step {currentStepIndex + 1} of {steps.length || '?'}</span>
+                    <p className="graph-description">
+                        {currentStep.description || 'Click Start to begin visualization'}
+                    </p>
                 </div>
             </div>
-            <div className="border bg-white rounded-lg p-4">
+
+            <div className="graph-visualization-area">
                 <svg width="400" height="400" viewBox="0 0 400 400">
                     {renderEdges()}
-                    {/* nodes */}
                     {Object.entries(nodePositions).map(([node, pos]) => {
                         const isVisited = currentStep.visited?.includes(node);
                         const isFrontier = currentStep.frontier?.includes(node);
                         const isCurrent = currentStep.currentNode === node;
-
                         let fillColor = "#fff";
-                        if (isCurrent) fillColor = "#f59e0b";
-                        else if (isVisited) fillColor = "#10b981";
-                        else if (isFrontier) fillColor = "#60a5fa";
-
+                        if (isCurrent) fillColor = "var(--win98-node-current)";
+                        else if (isVisited) fillColor = "var(--win98-node-visited)";
+                        else if (isFrontier) fillColor = "var(--win98-node-frontier)";
                         return (
                             <g key={node}>
                                 <motion.circle
@@ -201,36 +195,38 @@ const GraphVisualizer = forwardRef(({ algorithm, animationSpeed = 1000 }, ref) =
                     })}
                 </svg>
             </div>
-            <div className="flex space-x-4 mt-2">
-                <div className="flex-1 border rounded-lg p-3 bg-white">
-                    <h4 className="font-bold text-sm">{algorithm === 'bfs' ? 'Queue' : 'Stack'}</h4>
-                    <div className="flex flex-wrap gap-1 mt-2">
+
+            <div className="graph-data-container">
+                <div className="graph-data-panel">
+                    <h4 className="graph-data-title">{algorithm === 'bfs' ? 'Queue' : 'Stack'}</h4>
+                    <div className="graph-data-items">
                         {currentStep.frontier?.map((node, index) => (
-                            <div key={index} className="px-2 py-1 bg-blue-100 rounded text-sm">
+                            <div key={index} className="graph-node-item graph-frontier-item">
                                 {node}
                             </div>
                         ))}
                         {(!currentStep.frontier || currentStep.frontier.length === 0) && (
-                            <div className="text-gray-400 italic text-sm">Empty</div>
+                            <div className="graph-empty-message">Empty</div>
                         )}
                     </div>
                 </div>
-                <div className="flex-1 border rounded-lg p-3 bg-white">
-                    <h4 className="font-bold text-sm">Visited Nodes</h4>
-                    <div className="flex flex-wrap gap-1 mt-2">
+
+                <div className="graph-data-panel">
+                    <h4 className="graph-data-title">Visited Nodes</h4>
+                    <div className="graph-data-items">
                         {currentStep.visited?.map((node, index) => (
-                            <div key={index} className="px-2 py-1 bg-green-100 rounded text-sm">
+                            <div key={index} className="graph-node-item graph-visited-item">
                                 {node}
                             </div>
                         ))}
                         {(!currentStep.visited || currentStep.visited.length === 0) && (
-                            <div className="text-gray-400 italic text-sm">None</div>
+                            <div className="graph-empty-message">None</div>
                         )}
                     </div>
                 </div>
             </div>
         </div>
-    )
+    );
 });
 
 export default GraphVisualizer;

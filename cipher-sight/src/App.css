@@ -484,8 +484,122 @@ body {
   background-color: #c0c0c0;
 }
 
-/* LINKED LIST */
+/* GRAPH STYLING */
+:root {
+  --win98-background: #c0c0c0;
+  --win98-button-face: #c0c0c0;
+  --win98-window-frame: #87888f;
+  --win98-button-highlight: #ffffff;
+  --win98-button-shadow: #808080;
+  --win98-window-text: #000000;
+  --win98-highlight: #fdfec9;
+  --win98-active-title: #0a246a;
+  --win98-node-default: #c3c7cb;
+  --win98-node-border: #87888f;
+  --win98-node-current: #f59e0b;
+  --win98-node-visited: #10b981;
+  --win98-node-frontier: #60a5fa;
+  --win98-edge-default: #aaa;
+  --win98-edge-visited: #4caf50;
+}
 
+.graph-container {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  font-family: "MS Sans Serif", Arial, sans-serif;
+}
+
+.graph-info-panel {
+  padding: 8px;
+  background-color: var(--win98-background);
+  border: solid 2px;
+  border-color: var(--win98-button-highlight) var(--win98-button-shadow)
+    var(--win98-button-shadow) var(--win98-button-highlight);
+}
+
+.graph-title {
+  font-size: 14px;
+  font-weight: bold;
+  margin-bottom: 4px;
+  color: var(--win98-window-text);
+}
+
+.graph-step-info {
+  font-size: 11px;
+}
+
+.graph-step-counter {
+  font-weight: medium;
+}
+
+.graph-description {
+  margin-top: 4px;
+}
+
+.graph-visualization-area {
+  border: inset 2px;
+  border-color: var(--win98-button-shadow) var(--win98-button-highlight)
+    var(--win98-button-highlight) var(--win98-button-shadow);
+  background-color: white;
+  border-radius: 0;
+  padding: 16px;
+}
+
+.graph-data-container {
+  display: flex;
+  gap: 16px;
+  margin-top: 8px;
+}
+
+.graph-data-panel {
+  flex: 1;
+  border: inset 2px;
+  border-color: var(--win98-button-shadow) var(--win98-button-highlight)
+    var(--win98-button-highlight) var(--win98-button-shadow);
+  border-radius: 0;
+  padding: 12px;
+  background-color: white;
+}
+
+.graph-data-title {
+  font-weight: bold;
+  font-size: 11px;
+}
+
+.graph-data-items {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  margin-top: 8px;
+}
+
+.graph-node-item {
+  padding: 2px 8px;
+  border-radius: 0;
+  font-size: 11px;
+  border: solid 1px var(--win98-button-shadow);
+}
+
+.graph-frontier-item {
+  background-color: #cfe2ff;
+}
+
+.graph-visited-item {
+  background-color: #d1f2d9;
+}
+
+.graph-empty-message {
+  color: #808080;
+  font-style: italic;
+  font-size: 11px;
+}
+
+.graph-paused .graph-description::before {
+  content: "Paused: ";
+}
+
+/* LINKED LIST */
 :root {
   --win98-background: #c0c0c0;
   --win98-button-face: #c0c0c0;
