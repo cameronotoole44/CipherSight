@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { Link } from 'react-router-dom';
 import * as d3 from 'd3';
 import mermaid from 'mermaid';
+
 import bubbleSort from '../../algorithms/sort/bubbleSort';
 import quickSort from '../../algorithms/sort/quickSort';
 import mergeSort from '../../algorithms/sort/mergeSort';
@@ -9,23 +10,23 @@ import insertionSort from '../../algorithms/sort/insertionSort';
 import selectionSort from '../../algorithms/sort/selectionSort';
 import binarySearch from '../../algorithms/search/binarySearch';
 import linearSearch from '../../algorithms/search/linearSearch';
-import bfs from '../../algorithms/search/breadthFirstSearch';
-import dfs from '../../algorithms/search/depthFirstSearch';
 import Controls from '../Controls';
 import { generateRandomArray } from '../../utils/generateArray';
-import { generateRandomGraph } from '../../utils/generateGraph';
+import GraphVisualizer from './GraphVisualizer';
+import LinkedListVisualizer from './LinkedListVisualizer';
 
 const AlgorithmVisualizer = () => {
     const [array, setArray] = useState([]);
-    const [graph, setGraph] = useState(null);
     const [selectedAlgorithm, setSelectedAlgorithm] = useState('bubbleSort');
+    const [selectedDataStructure, setSelectedDataStructure] = useState('array');
+
     const [isRunning, setIsRunning] = useState(false);
     const [paused, setPaused] = useState(false);
     const [target, setTarget] = useState(null);
     const [isInitialized, setIsInitialized] = useState(false);
 
     const svgRef = useRef(null);
-    const mermaidRef = useRef(null);
+    const graphVisualizerRef = useRef(null);
     const sortingRef = useRef({
         isPaused: false,
         shouldStop: false,
@@ -35,7 +36,7 @@ const AlgorithmVisualizer = () => {
 
     useEffect(() => {
         mermaid.initialize({
-            startOnLoad: true,
+            startOnLoad: false,
             securityLevel: 'loose',
             theme: 'default',
         });
@@ -132,46 +133,10 @@ const AlgorithmVisualizer = () => {
         [target]
     );
 
-    const drawGraphWithMermaid = useCallback(async (graph, currentNode = null, edgesVisited = new Set(), visitOrder = []) => {
-        if (!mermaidRef.current) return;
-
-        const graphDescription = `
-            graph TD
-            ${graph.nodes.map((node) => `${node.id}["${node.label || node.id}"]`).join('\n')}
-            ${graph.links
-                .map((link) => {
-                    const visited = edgesVisited.has(`${link.source.id}-${link.target.id}`) || edgesVisited.has(`${link.target.id}-${link.source.id}`);
-                    return `${link.source.id} --> |${visited ? 'Visited' : ''}| ${link.target.id}`;
-                })
-                .join('\n')}
-        `;
-
-        try {
-            mermaid.mermaidAPI.render('graphDiv', graphDescription, (svgCode) => {
-                if (mermaidRef.current) {
-                    mermaidRef.current.innerHTML = svgCode;
-
-                    if (currentNode) {
-                        const currentNodeElement = mermaidRef.current.querySelector(`[id*="${currentNode.id}"]`);
-                        if (currentNodeElement) {
-                            currentNodeElement.style.fill = '#FDFEC9';
-                        }
-                    }
-                }
-            });
-        } catch (error) {
-            console.error('Error rendering Mermaid graph:', error);
-        }
-    }, []);
-
     const initializeData = useCallback(() => {
         if (isInitialized) return;
 
-        if (['bfs', 'dfs'].includes(selectedAlgorithm)) {
-            const newGraph = generateRandomGraph(10, 0.3);
-            setGraph(newGraph);
-            drawGraphWithMermaid(newGraph);
-        } else {
+        if (!['bfs', 'dfs'].includes(selectedAlgorithm) || selectedDataStructure !== 'graph') {
             let newArray = generateRandomArray(20);
 
             if (selectedAlgorithm === 'binarySearch') {
@@ -190,7 +155,7 @@ const AlgorithmVisualizer = () => {
         }
 
         setIsInitialized(true);
-    }, [selectedAlgorithm, drawArray, drawGraphWithMermaid, isInitialized]);
+    }, [selectedAlgorithm, selectedDataStructure, drawArray, isInitialized]);
 
     const runAlgorithm = async () => {
         if (isRunning) return;
@@ -200,78 +165,98 @@ const AlgorithmVisualizer = () => {
         setIsRunning(true);
 
         try {
-            let result;
-            switch (selectedAlgorithm) {
-                case 'bubbleSort':
-                case 'quickSort':
-                case 'mergeSort':
-                case 'insertionSort':
-                case 'selectionSort': {
-                    const sortFunction = {
-                        bubbleSort,
-                        quickSort,
-                        mergeSort,
-                        insertionSort,
-                        selectionSort,
-                    }[selectedAlgorithm];
+            if (selectedDataStructure === 'graph' && ['bfs', 'dfs'].includes(selectedAlgorithm)) {
+                if (graphVisualizerRef.current) {
+                    graphVisualizerRef.current.startVisualization();
+                }
+            } else {
+                let result;
+                switch (selectedAlgorithm) {
+                    case 'bubbleSort':
+                    case 'quickSort':
+                    case 'mergeSort':
+                    case 'insertionSort':
+                    case 'selectionSort': {
+                        const sortFunction = {
+                            bubbleSort,
+                            quickSort,
+                            mergeSort,
+                            insertionSort,
+                            selectionSort,
+                        }[selectedAlgorithm];
 
-                    result = await sortFunction([...array], drawArray, animationSpeed, sortingRef);
-                    break;
-                }
-                case 'binarySearch': {
-                    if (target === null) {
-                        throw new Error('No target value set for binary search');
+                        result = await sortFunction([...array], drawArray, animationSpeed, sortingRef);
+                        break;
                     }
-                    result = await binarySearch([...array], target, drawArray);
-                    break;
-                }
-                case 'linearSearch': {
-                    if (target === null) {
-                        throw new Error('No target value set for linear search');
+                    case 'binarySearch': {
+                        if (target === null) {
+                            throw new Error('No target value set for binary search');
+                        }
+                        result = await binarySearch([...array], target, drawArray);
+                        break;
                     }
-                    result = await linearSearch([...array], target, drawArray);
-                    break;
+                    case 'linearSearch': {
+                        if (target === null) {
+                            throw new Error('No target value set for linear search');
+                        }
+                        result = await linearSearch([...array], target, drawArray);
+                        break;
+                    }
+                    default:
+                        throw new Error(`Unknown algorithm: ${selectedAlgorithm}`);
                 }
-                case 'bfs':
-                case 'dfs': {
-                    const searchFunction = selectedAlgorithm === 'bfs' ? bfs : dfs;
-                    result = await searchFunction(graph, drawGraphWithMermaid, animationSpeed);
-                    break;
-                }
-                default:
-                    throw new Error(`Unknown algorithm: ${selectedAlgorithm}`);
             }
-
-            console.log(`Algorithm ${selectedAlgorithm} completed:`, result);
         } catch (error) {
             console.error('Error running algorithm:', error);
         } finally {
-            setIsRunning(false);
-            setPaused(false);
+            if (selectedDataStructure !== 'graph') {
+                setIsRunning(false);
+                setPaused(false);
+            }
         }
     };
 
     const handlePause = () => {
         setPaused(true);
-        sortingRef.current.isPaused = true;
+
+        if (selectedDataStructure === 'graph' && graphVisualizerRef.current) {
+            graphVisualizerRef.current.pauseVisualization();
+        } else {
+            sortingRef.current.isPaused = true;
+        }
     };
 
     const handleResume = () => {
         setPaused(false);
-        sortingRef.current.isPaused = false;
+
+        if (selectedDataStructure === 'graph' && graphVisualizerRef.current) {
+            graphVisualizerRef.current.resumeVisualization();
+        } else {
+            sortingRef.current.isPaused = false;
+        }
     };
 
     const handleReset = useCallback(() => {
-        sortingRef.current.shouldStop = true;
-        sortingRef.current.isPaused = false;
+        if (selectedDataStructure === 'graph' && graphVisualizerRef.current) {
+            graphVisualizerRef.current.resetVisualization();
+        } else {
+            sortingRef.current.shouldStop = true;
+            sortingRef.current.isPaused = false;
+        }
+
         setIsRunning(false);
         setPaused(false);
         setIsInitialized(false);
         initializeData();
-    }, [initializeData]);
+    }, [initializeData, selectedDataStructure]);
 
     const handleAlgorithmChange = (newAlgorithm) => {
         setSelectedAlgorithm(newAlgorithm);
+        setIsInitialized(false);
+    };
+
+    const handleDataStructureChange = (newDataStructure) => {
+        setSelectedDataStructure(newDataStructure);
         setIsInitialized(false);
     };
 
@@ -279,24 +264,66 @@ const AlgorithmVisualizer = () => {
         initializeData();
     }, [initializeData]);
 
-    return (
-        <div className="visualization-container">
-            <h1>Algorithm Visualizer</h1>
-            <div className="visualization">
-                {['bfs', 'dfs'].includes(selectedAlgorithm) ? (
-                    <div
-                        id="mermaid-svg-container"
-                        ref={mermaidRef}
-                        className="visualization-graph"
-                    ></div>
-                ) : (
+    const renderVisualizer = () => {
+        switch (selectedDataStructure) {
+            case 'array':
+                return (
                     <svg
                         ref={svgRef}
                         width="600"
                         height="400"
                         className="visualization-array"
                     ></svg>
-                )}
+                );
+            case 'graph':
+                return ['bfs', 'dfs'].includes(selectedAlgorithm) ? (
+                    <GraphVisualizer
+                        ref={graphVisualizerRef}
+                        algorithm={selectedAlgorithm}
+                        animationSpeed={animationSpeed}
+                    />
+                ) : (
+                    <div className="visualization-message" style={{
+                        padding: '20px',
+                        backgroundColor: '#C0C0C0',
+                        border: 'solid 2px',
+                        borderColor: '#FFFFFF #808080 #808080 #FFFFFF',
+                        fontFamily: "'MS Sans Serif', Arial, sans-serif",
+                        fontSize: '11px',
+                        textAlign: 'center'
+                    }}>
+                        Please select BFS or DFS algorithm for graph visualization
+                    </div>
+                );
+            case 'linkedList':
+                return <LinkedListVisualizer />;
+            default:
+                return <div>Select a data structure to visualize</div>;
+        }
+    };
+
+    return (
+        <div className="visualization-container">
+            <h1>Algorithm Visualizer</h1>
+
+            <div className="visualization-controls">
+                <div className="data-structure-selector">
+                    <label>Data Structure:</label>
+                    <select
+                        value={selectedDataStructure}
+                        onChange={(e) => handleDataStructureChange(e.target.value)}
+                        disabled={isRunning}
+                    >
+                        <option value="array">Array</option>
+                        <option value="graph">Graph</option>
+                        <option value="linkedList">Linked List</option>
+                    </select>
+                </div>
+            </div>
+
+            <div className="visualization">
+                {renderVisualizer()}
+
                 <Controls
                     selectedAlgorithm={selectedAlgorithm}
                     onAlgorithmChange={handleAlgorithmChange}
@@ -307,6 +334,7 @@ const AlgorithmVisualizer = () => {
                     onResume={handleResume}
                     onReset={handleReset}
                 />
+
                 <Link
                     to={`/help?algorithmName=${selectedAlgorithm}`}
                     className="button help-button"
