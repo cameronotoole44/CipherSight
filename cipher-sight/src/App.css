@@ -151,7 +151,7 @@ body {
   border: 2px solid;
   border-color: #808080 #fff #fff #808080;
   max-width: 800px;
-  margin: 2rem auto;
+  margin: 6rem auto;
   padding: 0;
 }
 
@@ -482,6 +482,270 @@ body {
 .dialog-content {
   padding: 16px;
   background-color: #c0c0c0;
+}
+
+/* LINKED LIST */
+
+:root {
+  --win98-background: #c0c0c0;
+  --win98-button-face: #c0c0c0;
+  --win98-window-frame: #87888f;
+  --win98-button-highlight: #ffffff;
+  --win98-button-shadow: #808080;
+  --win98-window-text: #000000;
+  --win98-highlight: #fdfec9;
+  --win98-active-title: #0a246a;
+  --win98-node-default: #c3c7cb;
+  --win98-node-border: #87888f;
+}
+
+.linked-list-container {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 1000;
+  width: 600px;
+  background-color: var(--win98-background);
+  border: solid 3px;
+  border-color: var(--win98-button-highlight) var(--win98-button-shadow)
+    var(--win98-button-shadow) var(--win98-button-highlight);
+  box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.3);
+  padding: 2px;
+  font-family: "MS Sans Serif", Arial, sans-serif;
+  font-size: 11px;
+  color: var(--win98-window-text);
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  resize: both;
+  overflow: auto;
+  min-width: 400px;
+  min-height: 350px;
+  max-width: 90vw;
+  max-height: 90vh;
+}
+
+.linked-list-container::after {
+  content: "";
+  position: absolute;
+  right: 2px;
+  bottom: 2px;
+  width: 16px;
+  height: 16px;
+  background-image: linear-gradient(
+    135deg,
+    var(--win98-background) 0%,
+    var(--win98-background) 25%,
+    var(--win98-button-shadow) 25%,
+    var(--win98-button-shadow) 50%,
+    var(--win98-background) 50%,
+    var(--win98-background) 75%,
+    var(--win98-button-shadow) 75%
+  );
+  cursor: nwse-resize;
+  pointer-events: none;
+}
+
+.linked-list-titlebar {
+  padding: 4px 6px;
+  background-color: var(--win98-active-title);
+  color: white;
+  font-weight: bold;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  cursor: move;
+}
+
+.linked-list-window-controls {
+  display: flex;
+}
+
+.linked-list-window-button {
+  width: 16px;
+  height: 14px;
+  background-color: var(--win98-button-face);
+  border: outset 1px;
+  border-color: var(--win98-button-highlight) var(--win98-button-shadow)
+    var(--win98-button-shadow) var(--win98-button-highlight);
+  margin-left: 2px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 10px;
+  cursor: pointer;
+}
+
+.linked-list-window-button:active {
+  border-style: inset;
+}
+
+.linked-list-controls {
+  padding: 8px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  align-items: center;
+}
+
+.linked-list-control-group {
+  display: flex;
+  align-items: center;
+}
+
+.linked-list-control-group label {
+  margin-right: 4px;
+}
+
+.linked-list-input {
+  background-color: white;
+  border: inset 2px;
+  border-color: var(--win98-button-shadow) var(--win98-button-highlight)
+    var(--win98-button-highlight) var(--win98-button-shadow);
+  padding: 2px 3px;
+  font-family: "MS Sans Serif", Arial, sans-serif;
+  font-size: 11px;
+  box-sizing: border-box;
+  outline: none;
+  border-radius: 0;
+  width: 80px;
+}
+
+.linked-list-input-small {
+  width: 40px;
+}
+
+.linked-list-input:disabled {
+  background-color: #e0e0e0;
+  color: #808080;
+}
+
+.linked-list-button-container {
+  padding: 0 8px 8px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+}
+
+.linked-list-button {
+  background-color: var(--win98-button-face);
+  border: outset 2px;
+  border-color: var(--win98-button-highlight) var(--win98-button-shadow)
+    var(--win98-button-shadow) var(--win98-button-highlight);
+  padding: 1px 6px;
+  font-family: "MS Sans Serif", Arial, sans-serif;
+  font-size: 11px;
+  font-weight: normal;
+  color: var(--win98-window-text);
+  box-shadow: none;
+  border-radius: 0;
+  margin: 0 4px;
+  cursor: pointer;
+  outline: none;
+}
+
+.linked-list-button:active:not(:disabled) {
+  border-style: inset;
+  border-color: var(--win98-button-shadow) var(--win98-button-highlight)
+    var(--win98-button-highlight) var(--win98-button-shadow);
+  padding: 2px 5px 0px 7px;
+}
+
+.linked-list-button:disabled {
+  opacity: 0.6;
+  cursor: default;
+}
+
+.linked-list-visualization {
+  overflow-x: auto;
+  padding: 8px;
+  background-color: white;
+  border: inset 2px;
+  border-color: var(--win98-button-shadow) var(--win98-button-highlight)
+    var(--win98-button-highlight) var(--win98-button-shadow);
+  margin: 0 8px;
+  min-height: 120px;
+  flex-grow: 1;
+}
+
+.linked-list-empty-message {
+  color: #808080;
+  font-style: italic;
+}
+
+.linked-list-nodes {
+  display: flex;
+  align-items: center;
+}
+
+.linked-list-node-container {
+  display: flex;
+  align-items: center;
+}
+
+.linked-list-node {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 80px;
+  height: 80px;
+  background-color: var(--win98-node-default);
+  border: solid 2px;
+  border-color: var(--win98-button-highlight) var(--win98-button-shadow)
+    var(--win98-button-shadow) var(--win98-button-highlight);
+  transition: background-color 0.2s;
+}
+
+.linked-list-node-highlighted {
+  background-color: var(--win98-highlight);
+}
+
+.linked-list-node-value {
+  font-weight: bold;
+}
+
+.linked-list-node-index {
+  font-size: 10px;
+  color: #808080;
+}
+
+.linked-list-arrow {
+  margin: 0 8px;
+  font-size: 18px;
+  color: #808080;
+}
+
+.linked-list-log-container {
+  border: inset 2px;
+  border-color: var(--win98-button-shadow) var(--win98-button-highlight)
+    var(--win98-button-highlight) var(--win98-button-shadow);
+  margin: 0 8px 8px;
+  height: 80px;
+  overflow-y: auto;
+  background-color: white;
+  padding: 4px;
+}
+
+.linked-list-log-title {
+  font-weight: bold;
+  margin-bottom: 4px;
+}
+
+.linked-list-log {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.linked-list-log-item {
+  border-bottom: 1px solid #e0e0e0;
+  padding: 2px 0;
+}
+
+.linked-list-log-item-last {
+  border-bottom: none;
 }
 
 /* POKEMON SECTION STYLING */
