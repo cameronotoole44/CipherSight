@@ -16,14 +16,15 @@ A comprehensive JavaScript and TypeScript project focused on visualizing and imp
 
 - Linear Search: Simple sequential search through an array
 - Binary Search: Efficient search on sorted arrays
+- Breadth First Search
+- Depth First Search
 
 ## Data Structures
 
 - Arrays
+- Graphs
+- Linked Lists
 
 ## Upcoming
 
-- Breadth First Search
-- Depth First Search
-- Graphs
-- Linked Lists
+TypeScript conversion
