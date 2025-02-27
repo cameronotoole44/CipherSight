@@ -70,7 +70,6 @@ function Home() {
                 <div className="status-bar">
                     <div className="status-item">Ready</div>
                     <div className="status-item">Visualizer loaded</div>
-                    <div className="status-time">4:30 PM</div>
                 </div>
             </div>
 
