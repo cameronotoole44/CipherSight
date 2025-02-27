@@ -1,0 +1,54 @@
+.visualization {
+  background-color: var(--win98-background);
+  border: 2px solid;
+  border-color: var(--win98-button-shadow) var(--win98-button-highlight)
+    var(--win98-button-highlight) var(--win98-button-shadow);
+  padding: 8px;
+  margin-top: 8px;
+}
+
+.visualization-container {
+  position: relative;
+  border: 3px solid;
+  border-color: #dfdfdf var(--win98-button-shadow) var(--win98-button-shadow)
+    #dfdfdf;
+  background-color: var(--win98-background);
+  box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.2);
+  max-width: 800px;
+  margin: 20px auto;
+  padding: 0;
+  font-family: "MS Sans Serif", Arial, sans-serif;
+}
+
+.visualization-array {
+  background-color: white;
+  border: inset 2px;
+  border-color: var(--win98-button-shadow) var(--win98-button-highlight)
+    var(--win98-button-highlight) var(--win98-button-shadow);
+  margin: 8px;
+}
+
+.visualization-graph {
+  width: 600px;
+  height: 400px;
+}
+
+.bar {
+  fill: #008081;
+  stroke: #006363;
+  stroke-width: 1;
+}
+
+.bar-3d-effect {
+  fill: url(#bar-gradient);
+}
+
+.toolbar {
+  background-color: var(--win98-background);
+  border: 2px solid;
+  border-color: var(--win98-button-shadow) var(--win98-button-highlight)
+    var(--win98-button-highlight) var(--win98-button-shadow);
+  padding: 4px;
+  display: flex;
+  gap: 4px;
+}

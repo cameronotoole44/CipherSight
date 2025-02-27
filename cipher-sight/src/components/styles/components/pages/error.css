@@ -1,0 +1,50 @@
+.error-page-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: calc(100vh - 40px);
+  background-color: var(--win98-desktop);
+  padding: 1rem;
+}
+
+.error-dialog {
+  width: 100%;
+  max-width: 500px;
+  background-color: var(--win98-background);
+}
+
+.error-content {
+  padding: 1rem;
+}
+
+.error-icon-container {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.error-icon {
+  width: 32px;
+  height: 32px;
+  image-rendering: pixelated;
+}
+
+.error-message {
+  flex: 1;
+}
+
+.error-message h2 {
+  margin: 0 0 1rem 0;
+  font-size: 1rem;
+  font-weight: bold;
+}
+
+.error-message p {
+  margin: 0.5rem 0;
+}
+
+.technical-details {
+  margin-top: 1rem;
+  font-family: "Courier New", monospace;
+  white-space: pre-line;
+}

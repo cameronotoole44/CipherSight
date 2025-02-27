@@ -1,0 +1,118 @@
+/* POKEMON SECTION STYLING */
+.pokemon-header {
+  display: flex;
+  align-items: flex-start;
+  margin-bottom: 16px;
+  background-color: #c0c0c0;
+  padding: 8px;
+  border: 2px solid;
+  border-color: #808080 #fff #fff #808080;
+}
+.pokemon-sprite {
+  width: 96px;
+  height: 96px;
+  image-rendering: pixelated;
+  background-color: #fff;
+  border: 2px solid;
+  border-color: #808080 #fff #fff #808080;
+  padding: 4px;
+}
+.pokemon-basic-info {
+  margin-left: 16px;
+  flex: 1;
+}
+.pokemon-name {
+  font-size: 20px;
+  margin: 0 0 8px 0;
+  color: #000080;
+  font-weight: bold;
+}
+.pokemon-type {
+  background-color: #fff;
+  padding: 4px 8px;
+  border: 2px solid;
+  border-color: #808080 #fff #fff #808080;
+  display: inline-block;
+  font-size: 14px;
+  margin-top: 4px;
+}
+.pokemon-stats {
+  background-color: #c0c0c0;
+  padding: 8px;
+  border: 2px solid;
+  border-color: #808080 #fff #fff #808080;
+  margin: 16px 0;
+}
+.pokemon-stats h3 {
+  color: #000080;
+  margin-bottom: 8px;
+  font-size: 14px;
+}
+.stat-row {
+  display: flex;
+  align-items: center;
+  margin: 6px 0;
+  gap: 8px;
+}
+.stat-name {
+  width: 100px;
+  font-size: 12px;
+  color: #000;
+}
+.stat-value {
+  width: 40px;
+  text-align: right;
+  font-family: "MS Sans Serif", Arial, sans-serif;
+  background: #fff;
+  border: 1px solid #808080;
+  padding: 1px 4px;
+}
+.stat-bar-container {
+  flex: 1;
+  height: 16px;
+  background-color: #fff;
+  border: 2px solid;
+  border-color: #808080 #fff #fff #808080;
+}
+.stat-bar {
+  height: 100%;
+  background-color: #000080;
+}
+.pokemon-details {
+  background-color: #fff;
+  border: 2px solid;
+  border-color: #808080 #fff #fff #808080;
+  padding: 8px;
+  margin: 16px 0;
+}
+.detail-row {
+  display: flex;
+  justify-content: space-between;
+  margin: 4px 0;
+  font-size: 14px;
+}
+.pokemon-abilities {
+  background-color: #c0c0c0;
+  padding: 8px;
+  border: 2px solid;
+  border-color: #808080 #fff #fff #808080;
+  margin-top: 16px;
+}
+.pokemon-abilities h3 {
+  color: #000080;
+  margin-bottom: 8px;
+  font-size: 14px;
+}
+.pokemon-abilities ul {
+  list-style: none;
+  padding: 0;
+  margin: 8px 0;
+}
+.pokemon-abilities li {
+  background-color: #fff;
+  padding: 4px 8px;
+  margin: 4px 0;
+  border: 2px solid;
+  border-color: #808080 #fff #fff #808080;
+  font-size: 14px;
+}

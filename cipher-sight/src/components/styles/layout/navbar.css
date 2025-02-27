@@ -1,0 +1,43 @@
+.navbar {
+  background-color: var(--win98-background);
+  border-bottom: 2px solid;
+  border-color: var(--win98-button-shadow) var(--win98-button-highlight)
+    var(--win98-button-highlight) var(--win98-button-shadow);
+  padding: 4px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.navbar-content {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 1rem;
+}
+
+.navbar-title {
+  font-size: 1.25rem;
+  font-weight: bold;
+  height: 2.5rem;
+  display: flex;
+  align-items: center;
+}
+
+.navbar-logo a {
+  color: var(--win98-window-text);
+  font-size: 16px;
+  text-decoration: none;
+  font-weight: bold;
+}
+
+.navbar-links {
+  list-style: none;
+  display: flex;
+  gap: 8px;
+}
+
+.navbar-links li a {
+  color: var(--win98-window-text);
+  text-decoration: none;
+  font-size: 14px;
+}

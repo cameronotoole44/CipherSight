@@ -1,0 +1,82 @@
+.window,
+.visualization-container,
+.home-container {
+  background-color: var(--win98-background);
+  border: 2px solid;
+  border-color: var(--win98-button-highlight) var(--win98-button-shadow)
+    var(--win98-button-shadow) var(--win98-button-highlight);
+  box-shadow: inset -1px -1px #0a0a0a, inset 1px 1px #dfdfdf,
+    inset -2px -2px grey, inset 2px 2px #fff;
+  margin: 8px;
+}
+
+.window-title,
+.visualization-title {
+  background-color: var(--win98-active-title);
+  color: #fff;
+  padding: 2px 4px;
+  font-weight: bold;
+  font-size: 14px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.window-content {
+  padding: 8px;
+}
+
+.window-controls {
+  display: flex;
+  gap: 2px;
+}
+
+.window-control {
+  width: 16px;
+  height: 14px;
+  background-color: var(--win98-background);
+  border: 1px solid;
+  border-color: var(--win98-button-highlight) var(--win98-button-shadow)
+    var(--win98-button-shadow) var(--win98-button-highlight);
+  font-size: 10px;
+  line-height: 1;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+
+.window-control:active {
+  border-color: var(--win98-button-shadow) var(--win98-button-highlight)
+    var(--win98-button-highlight) var(--win98-button-shadow);
+}
+
+.title-icon {
+  width: 16px;
+  height: 16px;
+  margin-right: 5px;
+}
+
+.status-bar {
+  display: flex;
+  justify-content: space-between;
+  border-top: 1px solid var(--win98-button-shadow);
+  padding: 3px 5px;
+  background-color: var(--win98-background);
+  font-size: 11px;
+}
+
+.status-time {
+  border-left: 1px solid var(--win98-button-shadow);
+  padding-left: 8px;
+}
+
+.section-heading {
+  background-color: #efefef;
+  border-top: 1px solid var(--win98-button-highlight);
+  border-bottom: 1px solid var(--win98-button-shadow);
+  padding: 4px 8px;
+  font-weight: bold;
+  font-size: 11px;
+}

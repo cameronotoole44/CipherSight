@@ -1,0 +1,33 @@
+.algorithm-description {
+  background-color: var(--win98-background);
+  border: solid 2px;
+  border-color: var(--win98-button-highlight) var(--win98-button-shadow)
+    var(--win98-button-shadow) var(--win98-button-highlight);
+  padding: 16px;
+  margin: 20px auto;
+  max-width: 800px;
+  font-family: "MS Sans Serif", Arial, sans-serif;
+}
+
+.algorithm-description h2 {
+  background-color: var(--win98-active-title);
+  color: white;
+  padding: 4px 6px;
+  margin-bottom: 16px;
+  font-size: 16px;
+  font-weight: bold;
+}
+
+.algorithm-description p {
+  margin-bottom: 12px;
+  line-height: 1.5;
+  font-size: 18px;
+}
+
+.algorithm-description p:last-child {
+  background: #efefef;
+  padding: 0.5rem;
+  border: 1px solid var(--win98-button-shadow);
+  font-family: "Courier New", monospace;
+  margin-top: 1rem;
+}

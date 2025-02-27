@@ -1,0 +1,84 @@
+.taskbar {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background-color: var(--win98-background);
+  border-top: 2px solid var(--win98-button-highlight);
+  padding: 0 0.25rem;
+  display: flex;
+  align-items: center;
+  height: 2.5rem;
+  gap: 0.5rem;
+}
+
+.taskbar-title {
+  flex: 1;
+  padding: 0.25rem 0.5rem;
+  border: 1px solid var(--win98-button-shadow);
+  background-color: #d4d0c8;
+}
+
+.taskbar-time {
+  padding: 0.25rem 0.5rem;
+  border: 2px solid;
+  border-color: var(--win98-button-shadow) var(--win98-button-highlight)
+    var(--win98-button-highlight) var(--win98-button-shadow);
+}
+
+/* START */
+.start-menu-container {
+  position: relative;
+}
+
+.start-button {
+  padding: 0.25rem 1rem;
+  border: 2px solid;
+  border-color: var(--win98-button-highlight) var(--win98-button-shadow)
+    var(--win98-button-shadow) var(--win98-button-highlight);
+  background-color: var(--win98-background);
+}
+
+.start-button.active {
+  border-color: var(--win98-button-shadow) var(--win98-button-highlight)
+    var(--win98-button-highlight) var(--win98-button-shadow);
+  background-color: #d4d0c8;
+}
+
+.start-menu {
+  position: absolute;
+  bottom: 100%;
+  left: 0;
+  width: 12rem;
+  background-color: var(--win98-background);
+  border: 2px solid;
+  border-color: var(--win98-button-highlight) var(--win98-button-shadow)
+    var(--win98-button-shadow) var(--win98-button-highlight);
+  box-shadow: 2px 2px 8px #0000004d;
+}
+
+.start-menu-sidebar {
+  background-color: var(--win98-active-title);
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 2rem;
+}
+
+.start-menu-items {
+  padding: 0.25rem;
+  padding-left: 2.5rem;
+  list-style: none;
+}
+
+.windows-text {
+  color: #fff;
+  font-size: 0.875rem;
+  font-weight: bold;
+  writing-mode: vertical-rl;
+  transform: rotate(180deg);
+  position: absolute;
+  bottom: 1rem;
+  left: 0.5rem;
+}

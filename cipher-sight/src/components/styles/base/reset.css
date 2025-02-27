@@ -1,0 +1,12 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: "Microsoft Sans Serif", "Segoe UI", Tahoma, sans-serif;
+}
+
+body {
+  background-color: var(--win98-desktop);
+  color: var(--win98-window-text);
+  line-height: 1.2;
+}

@@ -1,0 +1,21 @@
+/* BASE */
+@import "./base/variables.css";
+@import "./base/reset.css";
+/* LAYOUT */
+@import "./layout/windows.css";
+@import "./layout/navbar.css";
+@import "./layout/taskbar.css";
+/* COMPONENTS */
+@import "./components/buttons.css";
+@import "./components/inputs.css";
+@import "./components/dialog.css";
+@import "./components/menu.css";
+@import "./components/visualizer.css";
+@import "./components/graph-visualizer.css";
+@import "./components/linked-list-visualizer.css";
+@import "./components/features.css";
+@import "./components//poketime.css";
+/* PAGES */
+@import "./components/pages/home.css";
+@import "./components/pages/error.css";
+@import "./components/algorithm-description.css";
