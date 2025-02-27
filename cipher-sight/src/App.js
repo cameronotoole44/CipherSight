@@ -6,7 +6,7 @@ import Home from './pages/Home';
 import AlgorithmVisualizer from './components/visualization/algorithmVisualizer';
 import AlgorithmDescription from './algorithms/algorithmDescription';
 
-import './App.css';
+import './components/styles/App.css';
 
 const App = () => {
   return (

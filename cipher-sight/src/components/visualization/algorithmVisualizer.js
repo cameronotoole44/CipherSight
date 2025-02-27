@@ -136,7 +136,7 @@ const AlgorithmVisualizer = () => {
     const initializeData = useCallback(() => {
         if (isInitialized) return;
 
-        if (!['bfs', 'dfs'].includes(selectedAlgorithm) || selectedDataStructure !== 'graph') {
+        if (!['breadthFirstSearch', 'depthFirstSearch'].includes(selectedAlgorithm) || selectedDataStructure !== 'graph') {
             let newArray = generateRandomArray(20);
 
             if (selectedAlgorithm === 'binarySearch') {
@@ -165,9 +165,10 @@ const AlgorithmVisualizer = () => {
         setIsRunning(true);
 
         try {
-            if (selectedDataStructure === 'graph' && ['bfs', 'dfs'].includes(selectedAlgorithm)) {
+            if (selectedDataStructure === 'graph' && ['breadthFirstSearch', 'depthFirstSearch'].includes(selectedAlgorithm)) {
                 if (graphVisualizerRef.current) {
-                    graphVisualizerRef.current.startVisualization();
+                    const graphAlgorithm = selectedAlgorithm === 'breadthFirstSearch' ? 'bfs' : 'dfs';
+                    graphVisualizerRef.current.startVisualization(graphAlgorithm);
                 }
             } else {
                 let result;
@@ -276,10 +277,10 @@ const AlgorithmVisualizer = () => {
                     ></svg>
                 );
             case 'graph':
-                return ['bfs', 'dfs'].includes(selectedAlgorithm) ? (
+                return ['breadthFirstSearch', 'depthFirstSearch'].includes(selectedAlgorithm) ? (
                     <GraphVisualizer
                         ref={graphVisualizerRef}
-                        algorithm={selectedAlgorithm}
+                        algorithm={selectedAlgorithm === 'breadthFirstSearch' ? 'bfs' : 'dfs'}
                         animationSpeed={animationSpeed}
                     />
                 ) : (
@@ -304,44 +305,101 @@ const AlgorithmVisualizer = () => {
 
     return (
         <div className="visualization-container">
-            <h1>Algorithm Visualizer</h1>
-
-            <div className="visualization-controls">
-                <div className="data-structure-selector">
-                    <label>Data Structure:</label>
-                    <select
-                        value={selectedDataStructure}
-                        onChange={(e) => handleDataStructureChange(e.target.value)}
-                        disabled={isRunning}
-                    >
-                        <option value="array">Array</option>
-                        <option value="graph">Graph</option>
-                        <option value="linkedList">Linked List</option>
-                    </select>
+            <div className="visualization-title">
+                <span>Algorithm Visualizer</span>
+                <div className="window-controls">
+                    <button className="window-button">_</button>
+                    <button className="window-button">□</button>
+                    <button className="window-button">×</button>
                 </div>
+            </div>
+
+            <div className="select-container">
+                <label>Data Structure:</label>
+                <select
+                    className="data-structure-select"
+                    value={selectedDataStructure}
+                    onChange={(e) => handleDataStructureChange(e.target.value)}
+                    disabled={isRunning}
+                >
+                    <option value="array">Array</option>
+                    <option value="graph">Graph</option>
+                    <option value="linkedList">Linked List</option>
+                </select>
             </div>
 
             <div className="visualization">
                 {renderVisualizer()}
 
-                <Controls
-                    selectedAlgorithm={selectedAlgorithm}
-                    onAlgorithmChange={handleAlgorithmChange}
-                    isRunning={isRunning}
-                    paused={paused}
-                    onStart={runAlgorithm}
-                    onPause={handlePause}
-                    onResume={handleResume}
-                    onReset={handleReset}
-                />
+                <div className="select-container">
+                    <select
+                        className="algorithm-select"
+                        value={selectedAlgorithm}
+                        onChange={(e) => handleAlgorithmChange(e.target.value)}
+                        disabled={isRunning}
+                    >
+                        <option value="bubbleSort">Bubble Sort</option>
+                        <option value="quickSort">Quick Sort</option>
+                        <option value="mergeSort">Merge Sort</option>
+                        <option value="selectionSort">Selection Sort</option>
+                        <option value="insertionSort">Insertion Sort</option>
+                        <option value="binarySearch">Binary Search</option>
+                        <option value="linearSearch">Linear Search</option>
+                        <option value="breadthFirstSearch">Breadth First Search</option>
+                        <option value="depthFirstSearch">Depth First Search</option>
+                    </select>
+                </div>
+
+                <div className="controls-container">
+                    <button
+                        className={`control-button ${isRunning && !paused ? 'disabled' : ''}`}
+                        onClick={runAlgorithm}
+                        disabled={isRunning && !paused}
+                    >
+                        <span className="button-icon start-icon"></span>
+                        Start
+                    </button>
+                    <button
+                        className={`control-button ${!isRunning || paused ? 'disabled' : ''}`}
+                        onClick={handlePause}
+                        disabled={!isRunning || paused}
+                    >
+                        <span className="button-icon pause-icon"></span>
+                        Pause
+                    </button>
+                    <button
+                        className={`control-button ${!paused ? 'disabled' : ''}`}
+                        onClick={handleResume}
+                        disabled={!paused}
+                    >
+                        <span className="button-icon resume-icon"></span>
+                        Resume
+                    </button>
+                    <button
+                        className="control-button"
+                        onClick={handleReset}
+                    >
+                        <span className="button-icon reset-icon"></span>
+                        Reset
+                    </button>
+                </div>
 
                 <Link
                     to={`/help?algorithmName=${selectedAlgorithm}`}
-                    className="button help-button"
+                    className="control-button help-button"
                 >
                     Help
                 </Link>
             </div>
+
+            <svg style={{ position: 'absolute', width: 0, height: 0 }}>
+                <defs>
+                    <linearGradient id="bar-gradient" x1="0%" y1="0%" x2="100%" y2="0%">
+                        <stop offset="0%" stopColor="#00AEAE" />
+                        <stop offset="100%" stopColor="#006363" />
+                    </linearGradient>
+                </defs>
+            </svg>
         </div>
     );
 };
