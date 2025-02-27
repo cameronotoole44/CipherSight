@@ -27,7 +27,6 @@ const LinkedListVisualizer = () => {
                 const top = e.clientY - dragOffset.y;
                 containerRef.current.style.left = `${left}px`;
                 containerRef.current.style.top = `${top}px`;
-                containerRef.current.style.transform = 'none';
             }
         };
 

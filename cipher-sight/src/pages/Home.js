@@ -24,7 +24,7 @@ function Home() {
                             <img src={codeIcon} alt="Cipher Sight Icon" className="icon-large" />
                             <div className="app-info">
                                 <h2 className="app-title">Cipher Sight</h2>
-                                <p className="app-version">Version 1.0</p>
+                                <p className="app-version">Version 1.2</p>
                                 <p className="app-description">
                                     A visual representation for algorithms and data structures.
                                 </p>
@@ -89,7 +89,6 @@ function Home() {
                         <div className="dialog-content">
                             <div className="tab-panel">
                                 <div className="tab active">Available Algorithms</div>
-                                <div className="tab">Data Structures</div>
                             </div>
 
                             <div className="feature-list">
