@@ -52,3 +52,27 @@
   display: flex;
   gap: 4px;
 }
+
+.bar.current {
+  fill: #ffff00 !important;
+  stroke: #ff0000 !important;
+  stroke-width: 2px !important;
+  filter: drop-shadow(0 0 3px rgba(255, 255, 0, 0.8));
+}
+
+.bar.visited {
+  fill: #808080 !important;
+}
+
+.bar.found {
+  fill: #00a800 !important;
+  filter: drop-shadow(0 0 5px rgba(0, 168, 0, 0.8));
+}
+
+.bar.in-range {
+  fill: #008081 !important;
+}
+
+.bar.out-of-range {
+  opacity: 0.5;
+}

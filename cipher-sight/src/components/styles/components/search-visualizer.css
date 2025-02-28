@@ -1,0 +1,107 @@
+.search-visualization {
+  margin: 20px auto;
+  text-align: center;
+}
+.search-element {
+  display: inline-block;
+  width: 40px;
+  height: 40px;
+  margin: 0 2px;
+  text-align: center;
+  line-height: 40px;
+  border: 2px solid var(--win98-button-shadow);
+  background-color: var(--win98-node-default);
+  position: relative;
+  font-family: "MS Sans Serif", Arial, sans-serif;
+  font-size: 14px;
+  transition: all 0.3s ease;
+}
+.search-element.current {
+  background-color: var(--win98-highlight);
+  border-color: var(--win98-active-title);
+  transform: translateY(-5px);
+  box-shadow: 0 5px 0 var(--win98-button-shadow);
+}
+.search-element.visited {
+  background-color: var(--win98-button-shadow);
+  color: white;
+}
+.search-element.found {
+  background-color: #00a800;
+  color: white;
+  transform: translateY(-5px) scale(1.1);
+  box-shadow: 0 5px 0 #007700;
+}
+.search-element.in-range {
+  background-color: var(--win98-node-frontier);
+}
+.search-element.out-of-range {
+  opacity: 0.5;
+}
+.index-indicator {
+  position: absolute;
+  bottom: -20px;
+  left: 0;
+  right: 0;
+  text-align: center;
+  font-size: 10px;
+  color: var(--win98-button-shadow);
+}
+.search-controls {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  margin: 20px 0;
+}
+.search-speed-control {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.search-speed-slider {
+  width: 100px;
+  height: 5px;
+  background-color: var(--win98-background);
+  border: inset 2px;
+  border-color: var(--win98-button-shadow) var(--win98-button-highlight)
+    var(--win98-button-highlight) var(--win98-button-shadow);
+  -webkit-appearance: none;
+  appearance: none;
+}
+.search-speed-slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 14px;
+  height: 14px;
+  background-color: var(--win98-button-face);
+  border: outset 2px;
+  border-color: var(--win98-button-highlight) var(--win98-button-shadow)
+    var(--win98-button-shadow) var(--win98-button-highlight);
+  cursor: pointer;
+}
+.search-target {
+  display: inline-block;
+  padding: 5px 15px;
+  margin: 10px 0;
+  background-color: var(--win98-background);
+  border: 2px solid var(--win98-button-shadow);
+  font-weight: bold;
+}
+.binary-search-marker {
+  position: absolute;
+  top: -15px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 12px;
+  font-weight: bold;
+  color: var(--win98-active-title);
+}
+.marker-low::before {
+  content: "L";
+}
+.marker-high::before {
+  content: "H";
+}
+.marker-mid::before {
+  content: "M";
+}

@@ -14,7 +14,8 @@
 @import "./components/graph-visualizer.css";
 @import "./components/linked-list-visualizer.css";
 @import "./components/features.css";
-@import "./components//poketime.css";
+@import "./components/poketime.css";
+@import "./components/search-visualizer.css";
 /* PAGES */
 @import "./components/pages/home.css";
 @import "./components/pages/error.css";
