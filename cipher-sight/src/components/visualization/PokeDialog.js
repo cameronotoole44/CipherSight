@@ -1,8 +1,8 @@
 import React from 'react';
+import ReactDOM from 'react-dom';
 
 const PokemonDialog = ({ pokemon, onClose }) => {
     if (!pokemon) return null;
-
 
     const types = pokemon.types.map(type =>
         type.type.name.charAt(0).toUpperCase() + type.type.name.slice(1)
@@ -10,7 +10,7 @@ const PokemonDialog = ({ pokemon, onClose }) => {
 
     const getStatPercentage = (baseStat) => (baseStat / 255) * 100;
 
-    return (
+    return ReactDOM.createPortal(
         <div className="dialog-overlay">
             <div className="dialog-window">
                 <div className="dialog-title-bar">
@@ -80,8 +80,9 @@ const PokemonDialog = ({ pokemon, onClose }) => {
                     </div>
                 </div>
             </div>
-        </div>
-    )
+        </div>,
+        document.body // use the dom to resolve the zindex issue
+    );
 };
 
 export default PokemonDialog;
