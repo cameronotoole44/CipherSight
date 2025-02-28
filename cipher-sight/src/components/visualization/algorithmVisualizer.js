@@ -10,7 +10,6 @@ import insertionSort from '../../algorithms/sort/insertionSort';
 import selectionSort from '../../algorithms/sort/selectionSort';
 import binarySearch from '../../algorithms/search/binarySearch';
 import linearSearch from '../../algorithms/search/linearSearch';
-import Controls from '../Controls';
 import { generateRandomArray } from '../../utils/generateArray';
 import GraphVisualizer from './GraphVisualizer';
 import LinkedListVisualizer from './LinkedListVisualizer';
@@ -66,38 +65,99 @@ const AlgorithmVisualizer = () => {
             };
 
             const container = svg.append('g').attr('transform', `translate(0, 0)`);
-
             container
                 .append('rect')
                 .attr('width', width)
                 .attr('height', height)
                 .attr('fill', visualizerColors.background);
 
+            const isSearchAlgorithm = ['binarySearch', 'linearSearch'].includes(selectedAlgorithm);
+
+            if (isSearchAlgorithm && target !== null) {
+                const targetBox = svg
+                    .append('g')
+                    .attr('transform', `translate(10, 10)`);
+
+                targetBox
+                    .append('rect')
+                    .attr('width', 120)
+                    .attr('height', 25)
+                    .attr('fill', visualizerColors.background)
+                    .attr('stroke', visualizerColors.border)
+                    .attr('stroke-width', 1);
+
+                targetBox
+                    .append('text')
+                    .attr('x', 10)
+                    .attr('y', 17)
+                    .attr('text-anchor', 'start')
+                    .attr('fill', visualizerColors.text)
+                    .attr('font-family', 'MS Sans Serif, Arial, sans-serif')
+                    .attr('font-size', '12px')
+                    .text(`Target: ${target}`);
+
+                const metrics = svg
+                    .append('g')
+                    .attr('transform', `translate(${width - 120}, 10)`);
+
+                metrics
+                    .append('rect')
+                    .attr('width', 110)
+                    .attr('height', 40)
+                    .attr('fill', visualizerColors.background)
+                    .attr('stroke', visualizerColors.border)
+                    .attr('stroke-width', 1);
+
+                metrics
+                    .append('text')
+                    .attr('x', 55)
+                    .attr('y', 17)
+                    .attr('text-anchor', 'middle')
+                    .attr('fill', visualizerColors.text)
+                    .attr('font-family', 'MS Sans Serif, Arial, sans-serif')
+                    .attr('font-size', '11px')
+                    .text(`Steps: ${visitedIndices.length}`);
+
+                metrics
+                    .append('text')
+                    .attr('x', 55)
+                    .attr('y', 32)
+                    .attr('text-anchor', 'middle')
+                    .attr('fill', visualizerColors.text)
+                    .attr('font-family', 'MS Sans Serif, Arial, sans-serif')
+                    .attr('font-size', '11px')
+                    .text(`Comparisons: ${visitedIndices.length}`);
+            }
+
+            const usableHeight = isSearchAlgorithm ? height - 60 : height - 40;
+
             container
                 .selectAll('.bar')
                 .data(arr)
                 .enter()
                 .append('rect')
-                .attr('class', 'bar')
-                .attr('x', (d, i) => i * barWidth + 1)
-                .attr('y', (d) => height - (d / maxValue) * (height - 40))
-                .attr('width', barWidth - 2)
-                .attr('height', (d) => (d / maxValue) * (height - 40))
-                .attr('fill', (d, i) => {
-                    if (i === currentIndex && targetFound) return visualizerColors.found;
-                    if (i === currentIndex) return visualizerColors.current;
-                    if (visitedIndices.includes(i)) return visualizerColors.visited;
-                    if (i >= leftBound && i <= rightBound) return visualizerColors.range;
-                    return visualizerColors.default;
+                .attr('class', (d, i) => {
+                    let classes = 'bar';
+                    if (i === currentIndex && targetFound) classes += ' found';
+                    else if (i === currentIndex) classes += ' current';
+                    else if (visitedIndices.includes(i)) classes += ' visited';
+                    else if (isSearchAlgorithm && i >= leftBound && i <= rightBound) classes += ' in-range';
+                    else if (isSearchAlgorithm) classes += ' out-of-range';
+                    return classes;
                 })
+                .attr('x', (d, i) => i * barWidth + 1)
+                .attr('y', (d) => height - (d / maxValue) * usableHeight)
+                .attr('width', barWidth - 2)
+                .attr('height', (d) => (d / maxValue) * usableHeight)
+                .attr('fill', visualizerColors.default)
                 .attr('stroke', visualizerColors.border)
                 .attr('stroke-width', 1);
-
             container
-                .selectAll('text')
+                .selectAll('text.value')
                 .data(arr)
                 .enter()
                 .append('text')
+                .attr('class', 'value')
                 .attr('x', (d, i) => i * barWidth + barWidth / 2)
                 .attr('y', height - 15)
                 .attr('text-anchor', 'middle')
@@ -106,31 +166,21 @@ const AlgorithmVisualizer = () => {
                 .attr('font-family', 'MS Sans Serif, Arial, sans-serif')
                 .text((d) => d);
 
-            if (target !== null) {
-                const targetBox = svg
-                    .append('g')
-                    .attr('transform', `translate(${width / 2 - 50}, 10)`);
-
-                targetBox
-                    .append('rect')
-                    .attr('width', 100)
-                    .attr('height', 25)
-                    .attr('fill', visualizerColors.background)
-                    .attr('stroke', visualizerColors.border)
-                    .attr('stroke-width', 1);
-
-                targetBox
-                    .append('text')
-                    .attr('x', 50)
-                    .attr('y', 17)
-                    .attr('text-anchor', 'middle')
-                    .attr('fill', visualizerColors.text)
-                    .attr('font-family', 'MS Sans Serif, Arial, sans-serif')
-                    .attr('font-size', '12px')
-                    .text(`Target: ${target}`);
-            }
+            container
+                .selectAll('text.index')
+                .data(arr)
+                .enter()
+                .append('text')
+                .attr('class', 'index')
+                .attr('x', (d, i) => i * barWidth + barWidth / 2)
+                .attr('y', height - 2)
+                .attr('text-anchor', 'middle')
+                .attr('fill', visualizerColors.text)
+                .attr('font-size', '10px')
+                .attr('font-family', 'MS Sans Serif, Arial, sans-serif')
+                .text((d, i) => i);
         },
-        [target]
+        [target, selectedAlgorithm]
     );
 
     const initializeData = useCallback(() => {
@@ -190,17 +240,11 @@ const AlgorithmVisualizer = () => {
                         break;
                     }
                     case 'binarySearch': {
-                        if (target === null) {
-                            throw new Error('No target value set for binary search');
-                        }
-                        result = await binarySearch([...array], target, drawArray);
+                        result = await binarySearch([...array], target, drawArray, sortingRef, animationSpeed);
                         break;
                     }
                     case 'linearSearch': {
-                        if (target === null) {
-                            throw new Error('No target value set for linear search');
-                        }
-                        result = await linearSearch([...array], target, drawArray);
+                        result = await linearSearch([...array], target, drawArray, sortingRef, animationSpeed);
                         break;
                     }
                     default:
