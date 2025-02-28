@@ -1,24 +1,31 @@
-export async function binarySearch(arr, target, drawArray) {
+async function binarySearch(arr, target, drawArray, controlRef, animationSpeed = 800) {
     let low = 0;
     let high = arr.length - 1;
     const visitedIndices = [];
 
-    // console.log("Array to search:", arr);
-    // console.log("Target to find:", target);
+    const delay = async (ms) => {
+        await new Promise(resolve => setTimeout(resolve, ms));
 
-    const delay = ms => new Promise(resolve => setTimeout(resolve, ms));
+        while (controlRef.current.isPaused) {
+            if (controlRef.current.shouldStop) return true;
+            await new Promise(resolve => setTimeout(resolve, 100));
+        }
+
+        return controlRef.current.shouldStop;
+    };
+
+    drawArray(arr, -1, visitedIndices, false, low, high);
+    if (await delay(animationSpeed)) return -1;
 
     while (low <= high) {
         const mid = Math.floor((low + high) / 2);
         visitedIndices.push(mid);
-
+        // current element being checked gets highlighted
         drawArray(arr, mid, visitedIndices, false, low, high);
-
-        await delay(800);
-
+        if (await delay(animationSpeed)) return -1;
         if (arr[mid] === target) {
+            // target found highlight it
             drawArray(arr, mid, visitedIndices, true, low, high);
-            // console.log('Target found at index:', mid);
             return mid;
         }
 
@@ -27,11 +34,11 @@ export async function binarySearch(arr, target, drawArray) {
         } else {
             high = mid - 1;
         }
-
-        await delay(800);
+        drawArray(arr, -1, visitedIndices, false, low, high);
+        if (await delay(animationSpeed)) return -1;
     }
 
-    // console.log('Target not found');
+    // not found show the final state
     drawArray(arr, -1, visitedIndices, false, low, high);
     return -1;
 }

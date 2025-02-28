@@ -1,31 +1,33 @@
-const linearSearch = async (arr, target, updateVisualizer, delay = 1000) => {
+const linearSearch = async (arr, target, drawArray, controlRef, animationSpeed = 800) => {
+    const visitedIndices = [];
+
+    const delay = async (ms) => {
+        await new Promise(resolve => setTimeout(resolve, ms));
+
+        while (controlRef.current.isPaused) {
+            if (controlRef.current.shouldStop) return true;
+            await new Promise(resolve => setTimeout(resolve, 100));
+        }
+
+        return controlRef.current.shouldStop;
+    };
+
+    drawArray(arr, -1, visitedIndices, false, 0, arr.length - 1);
+    if (await delay(animationSpeed / 2)) return -1;
+
     for (let i = 0; i < arr.length; i++) {
-        updateVisualizer(
-            arr,
-            i,
-            arr.slice(0, i).map((_, idx) => idx),
-            arr[i] === target
-        );
+        visitedIndices.push(i);
 
-        await new Promise(resolve => setTimeout(resolve, delay));
-
+        drawArray(arr, i, visitedIndices, false, 0, arr.length - 1);
+        if (await delay(animationSpeed)) return -1;
         if (arr[i] === target) {
-            updateVisualizer(
-                arr,
-                i,
-                arr.slice(0, i + 1).map((_, idx) => idx),
-                true
-            );
+
+            drawArray(arr, i, visitedIndices, true, 0, arr.length - 1);
             return i;
         }
     }
 
-    updateVisualizer(
-        arr,
-        -1,
-        arr.map((_, idx) => idx),
-        false
-    );
+    drawArray(arr, -1, visitedIndices, false, 0, arr.length - 1);
     return -1;
 };
 
